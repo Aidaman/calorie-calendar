@@ -1,0 +1,20 @@
+:host{
+  height: 100%;
+}
+
+.row-calendar{
+  margin-top: 20px;
+}
+.hours{
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 16px;
+
+  color: #413F3F;
+}
+.stick-header{
+  position: sticky;
+  background: #fff;
+  top: 0;
+}

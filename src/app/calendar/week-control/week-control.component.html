@@ -1,0 +1,16 @@
+<div class="column">
+  <div class="row">
+    <app-calendar-select (changeMonth)="onMonthChanged($event)" [data]="months"></app-calendar-select>
+        <div class="column"
+             *ngFor="let weekday of week | async; index as i"
+             (swiperight)="decrease()" (swipeleft)="increase()"
+             (click)="dayClick(weekday)" >
+          <div class="numbers">
+            <span [class.active]="weekday.activeFlag" class="number">{{weekday.dayNum}}</span>
+          </div>
+          <div class="weekdays">
+            <span class="weekday">{{weekday.nameOfDay}}</span>
+          </div>
+        </div>
+  </div>
+</div>

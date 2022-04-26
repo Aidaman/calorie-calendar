@@ -1,0 +1,56 @@
+<div class="container margin-right">
+  <div class="controls">
+    <a class="control" [routerLink]="['/calendar']">Cancel</a>
+  </div>
+
+  <div class="form" [formGroup]="signupForm" (ngSubmit)="saveMeal()">
+    <h1 class="form__title">add meal</h1>
+    <app-custom-control formControlName="title"
+                        [title]="'title'"
+                        [type]="'text'"></app-custom-control>
+      <div class="row">
+        <app-custom-control formControlName="kcal"
+                            [title]="'kcal'"
+                            [type]="'number'"></app-custom-control>
+        <app-custom-control formControlName="time"
+                            [title]="'Time'"
+                            [type]="'time'"></app-custom-control>
+      </div>
+    <app-custom-control formControlName="fats"
+                        [title]="'fats (gm)'"
+                        [type]="'number'"></app-custom-control>
+
+    <app-custom-control formControlName="protein"
+                        [title]="'protein (gm)'"
+                        [type]="'number'"></app-custom-control>
+
+    <app-custom-control formControlName="carbohydrates"
+                        [title]="'carbohydrates (gm)'"
+                        [type]="'number'"></app-custom-control>
+
+
+      <div class="image-section">
+        <label for="image-input" class="image-input">
+          <ng-container *ngIf="!img">
+            <i  class="fa fa-image"></i>Insert an Image
+          </ng-container>
+          <img *ngIf="img" [src]="img" alt="" class="test">
+        </label>
+        <input type="file"
+               #imageInput
+               (input)="imageChanged($event)"
+               formControlName="image"
+               id="image-input">
+      </div>
+    </div>
+
+    <div class="centralise">
+      <button class="btn margin-top"
+              [disabled]="signupForm.invalid &&
+                          !signupForm.dirty"
+              (click)="saveMeal()">Save Settings</button>
+    </div>
+
+
+
+</div>

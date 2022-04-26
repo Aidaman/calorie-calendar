@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="controls">
+    <a class="control" [routerLink]="['/calendar']">Cancel</a>
+    <i class="fa fa-arrow-circle-o-right" [routerLink]="['/calendar']"></i>
+  </div>
+
+  <div class="form" [formGroup]="regForm">
+    <h1 class="form__title">Personal Settings</h1>
+
+    <div class="margin-right">
+
+      <div class="margin-bottom-20">
+        <div class="section" >
+          <p class="section__title">Gender</p>
+          <div class="radios">
+            <div class="radio-label-wrapper" *ngFor="let g of genders">
+              <input type="radio"
+                     name="gender"
+                     [value]="g"
+                     [id]="g"
+                     class="radio"
+                     formControlName="gender">
+              <label [for]="g"
+                     class="radio-label">{{g | titlecase}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <app-custom-control formControlName="weight"
+                            [title]="'Weight (kg)'"
+                            [type]="'number'"></app-custom-control>
+      <app-custom-control formControlName="height"
+                            [title]="'Height (cm)'"
+                            [type]="'number'"></app-custom-control>
+
+      <button class="btn margin-top" (click)="calculateCalories()">Calculate Rate for day</button>
+
+      <div class="row">
+        <app-custom-control formControlName="minCal"
+                            [title]="'min. cal'"
+                            [type]="'number'"></app-custom-control>
+        <app-custom-control formControlName="maxCal"
+                            [title]="'max. cal'"
+                            [type]="'number'"></app-custom-control>
+      </div>
+
+      <app-custom-control formControlName="fats"
+                            [title]="'fats (gm)'"
+                            [type]="'number'"></app-custom-control>
+      <app-custom-control formControlName="protein"
+                            [title]="'protein (gm)'"
+                            [type]="'number'"></app-custom-control>
+      <app-custom-control formControlName="carbohydrates"
+                          [title]="'carbohydrates (gm)'"
+                          [type]="'number'"></app-custom-control>
+    </div>
+
+    <div class="centralise">
+      <button class="btn margin-top"
+              [disabled]="regForm.invalid &&
+                          !regForm.dirty"
+              (click)="saveSetting()">Save Settings</button>
+    </div>
+
+  </div>
+</div>
+

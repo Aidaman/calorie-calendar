@@ -1,0 +1,7 @@
+<div class="section">
+  <p class="section__title">{{title}}</p>
+  <input class="section__fancy-input"
+         [value]="val"
+         (input)="value = ($any($event.target).value)"
+         [type]="type">
+</div>

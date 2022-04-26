@@ -1,0 +1,39 @@
+@import "src/app/colors";
+
+.signup{
+  font: {
+    size: 32px;
+  };
+  color: $primary;
+  text-align: center;
+  margin-left: 7.5px;
+}
+
+.header{
+  margin-top: 8px;
+  .cells{
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: 50px repeat(7, 49px);
+    text-align: center;
+
+    .cell{
+      word-wrap: anywhere;
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 18px;
+      padding: 4px;
+    }
+  }
+}
+
+.text-blue{
+  color: $primary;
+}
+.text-yellow{
+  color: $yellow;
+}
+.text-red{
+  color: $red;
+}

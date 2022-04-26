@@ -1,0 +1,57 @@
+@import "src/app/colors";
+:host{
+  display: block;
+}
+
+.wrapper{
+  width: 100%;
+
+  .select{
+    //display: grid;
+    //grid-template-columns: auto min-content;
+
+    width: 100%;
+    padding: 2px 5px;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+
+    //span{
+    //  overflow: hidden;
+    //  text-overflow: ellipsis;
+    //}
+  }
+
+  .select__options{
+    position: absolute;
+    top: 8.5%;
+    z-index: 7;
+    height: 150px;
+    overflow-y: auto;
+
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    font-weight: 400;
+
+    display: flex;
+    flex-direction: column;
+
+    box-shadow: 0px 20px 10px 0px rgba(0,0,0,0.4);
+
+    .select__option{
+      background: #fff;
+      padding: 5px 10px;
+      border-top: solid 1px #aaa;
+      border-bottom: solid 1px #aaa;
+
+      &.active{
+        background: $primary;
+        color: white;
+      }
+    }
+  }
+  //<i class="fa-solid fa-arrow-down-to-dotted-line"></i>
+
+}

@@ -1,0 +1,39 @@
+@import "src/app/colors";
+
+.row{
+  display: grid;
+  font-weight: bold;
+  grid-template-columns: 45px repeat(7, 49px);
+
+  app-calendar-select{
+    align-self: flex-end;
+  }
+  .column{
+    display: grid;
+    grid-template-rows: 24px 24px;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    .active{
+      background: $primary;
+      color: white;
+      border-radius: 50%;
+      padding: 2px;
+    }
+
+    .number{
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 16px;
+    }
+    .weekdays{
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+    }
+  }
+}

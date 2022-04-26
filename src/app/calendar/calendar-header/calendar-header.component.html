@@ -1,0 +1,15 @@
+<div class="header column">
+  <div class="row-calendar">
+    <div class="column">
+      <i class="signup fa fa-gear" [routerLink]="['../registration']"></i>
+    </div>
+
+    <div class="cells">
+      <span class="cell"
+            *ngFor="let weekday of week | async">
+        <span [class]="(weekday.date | handleKcal)?.amount | fillPipe">{{ (weekday.date | handleKcal)?.amount }}</span>
+      </span>
+    </div>
+
+  </div>
+</div>

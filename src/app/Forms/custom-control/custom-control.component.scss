@@ -1,0 +1,39 @@
+@import "src/app/colors";
+
+:host{
+  display: block;
+
+}
+
+.section, .row {
+  width: 100%;
+  &__title {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    margin-bottom: 6px;
+
+    color: #000000;
+  }
+
+  &__fancy-input {
+    padding-bottom: 6px;
+    border: none;
+    border-bottom: 1px solid black;
+    width: 100%;
+
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+
+    color: #000000;
+
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid $primary-500;
+    }
+  }
+}

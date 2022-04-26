@@ -1,0 +1,63 @@
+@import 'src/app/colors';
+
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  //padding: 70px 30px 140px;
+
+  .title{
+    font-family: 'Risque', cursive;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 50px;
+    //line-height: 58px;
+
+    color: $primary;
+  }
+  .subtitle{
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 30px;
+    //line-height: 35px;
+
+    color: #000000;
+  }
+  .app__logo{
+    margin: 48px 0;
+  }
+  .signin{
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    //padding-top: 15px;
+    //padding-bottom: 15px;
+
+    font-family: 'Roboto', sans-serif;
+
+
+    background: $primary;
+
+    .btn{
+      padding: 0 13px 0 0;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 28px;
+      line-height: 33px;
+    }
+
+    &__google-logo{
+      background: #FFFFFF;
+      width: 64px;
+    }
+    span{
+      margin-left: 15px;
+    }
+  }
+
+}
