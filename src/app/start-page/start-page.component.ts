@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {GoogleLoginProvider, SocialAuthService, SocialUser} from "angularx-social-login";
 import {UserDataService} from "../user-data.service";
 import {Router} from "@angular/router";
+import {Store} from "@ngrx/store";
+import {userLoginAction} from "../store/user/user.action";
 
 @Component({
   selector: 'app-start-page',
@@ -18,6 +20,7 @@ export class StartPageComponent implements OnInit {
     private formBuilder: FormBuilder,
     private udService: UserDataService,
     private router: Router,
+    private store: Store,
     private socialAuthService: SocialAuthService
   ) {}
 
@@ -34,6 +37,7 @@ export class StartPageComponent implements OnInit {
   }
 
   loginWithGoogle(): void {
+    this.store.dispatch(userLoginAction());
     if(!localStorage.getItem('user')){
       this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
     } else{

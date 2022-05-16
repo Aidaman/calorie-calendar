@@ -8,7 +8,7 @@ import {findKCal} from "../../shared/consts/findKCal";
   styleUrls: ['./calendar-header.component.scss', "../calendar.component.scss"]
 })
 export class CalendarHeaderComponent {
-  public meals = this.cService.getMeals();
+  public meals = this.cService.getMealsAsync();
   public week = this.cService.week;
   constructor(private cService: CalendarService) { }
 }

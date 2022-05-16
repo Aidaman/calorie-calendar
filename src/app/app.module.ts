@@ -3,27 +3,29 @@ import {BrowserModule, HammerModule} from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CalendarComponent } from './calendar/calendar.component';
 import { StartPageComponent } from './start-page/start-page.component';
 import {  AddMealComponent} from "./Forms/add-meal/add-meal.component";
 import {  RegistrationComponent} from "./Forms/registration/registration.component";
 import {  ViewMealComponent} from "./Forms/view-meal/view-meal.component";
-import { CalendarHeaderComponent } from './calendar/calendar-header/calendar-header.component';
-import { CalendarSelectComponent } from './calendar/calendar-select/calendar-select.component';
-import { ShortPipe } from './shared/pipes/short.pipe';
-import { CalendarGridComponent } from './calendar/callendar-grid/calendar-grid.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { WeekControlComponent } from './calendar/week-control/week-control.component';
-import { HandleOutputPipe } from './shared/pipes/handle-output.pipe';
-import { CustomControlComponent } from './Forms/custom-control/custom-control.component';
-import {  ColorFillPipe} from "./shared/pipes/color-fill.pipe";
-import {  HandleKcalPipe} from "./shared/pipes/handleKcal.pipe";
 import {
   GoogleLoginProvider,
-  SocialAuthService,
   SocialAuthServiceConfig,
   SocialLoginModule
 } from "angularx-social-login";
+import {CalendarModule} from "./calendar/calendar.module";
+import {SharedModule} from "./shared/shared.module";
+import {CustomControlComponent} from "./Forms/custom-control/custom-control.component";
+import {StoreModule} from "@ngrx/store";
+import {userReducer} from "./store/user/user-reducers";
+import {EffectsModule} from "@ngrx/effects";
+import {UserChangeEffect} from "./store/user/effects/user-change.effect";
+import {UserLognEffect} from "./store/user/effects/user-login.effect";
+import {StoreDevtoolsModule} from "@ngrx/store-devtools";
+import {AddMealsEffect} from "./store/effects/add-meails.effect";
+import {calendarReducers} from "./store/calendar/calendar-reducers";
+import {RemoveMealsEffect} from "./store/effects/remove-meals.effect";
+import {GetMealsArrEffect} from "./store/effects/get-meals-arr.effect";
 
 @NgModule({
   declarations: [
@@ -31,17 +33,9 @@ import {
     AddMealComponent,
     RegistrationComponent,
     ViewMealComponent,
-    CalendarComponent,
     StartPageComponent,
-    CalendarHeaderComponent,
-    CalendarSelectComponent,
-    ShortPipe,
-    CalendarGridComponent,
-    WeekControlComponent,
-    HandleOutputPipe,
     CustomControlComponent,
-    ColorFillPipe,
-    HandleKcalPipe,
+
   ],
     imports: [
         BrowserModule,
@@ -49,6 +43,22 @@ import {
         FormsModule,
         ReactiveFormsModule,
         SocialLoginModule,
+        CalendarModule,
+        SharedModule,
+
+        StoreModule.forRoot({}),
+        StoreModule.forFeature('user', userReducer),
+        StoreModule.forFeature('calendar', calendarReducers),
+        StoreDevtoolsModule.instrument({
+
+        }),
+        EffectsModule.forRoot(
+          [UserChangeEffect,
+                    UserLognEffect,
+                    AddMealsEffect,
+                    RemoveMealsEffect,
+                    GetMealsArrEffect]),
+
         // SocialAuthService,
         // GoogleLoginProvider,
         HammerModule

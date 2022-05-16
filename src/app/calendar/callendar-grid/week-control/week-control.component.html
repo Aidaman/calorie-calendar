@@ -4,21 +4,13 @@
         <div class="column"
              *ngFor="let weekday of week | async; index as i"
              (swiperight)="decrease()" (swipeleft)="increase()"
-             (click)="dayClick(weekday)" >
+             (click)="dayClick(weekday)">
           <div class="numbers">
-            <span [class.active]="weekday.activeFlag" class="number">{{weekday.dayNum}}</span>
+            <span class="number" [class.active]="isDayActive(weekday)">{{weekday | date:'dd'}}</span>
           </div>
           <div class="weekdays">
-            <span class="weekday">{{weekday.nameOfDay}}</span>
+            <span class="weekday">{{weekday | date:'EEE'}}</span>
           </div>
         </div>
   </div>
 </div>
-
-
-
-
-
-
-
-

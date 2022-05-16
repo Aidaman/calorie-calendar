@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {IUser, UserDataService} from "../../user-data.service";
+import {UserDataService} from "../../user-data.service";
 import {Router} from "@angular/router";
+import {IUser} from "../../shared/interfaces/user";
+import {Store} from "@ngrx/store";
+import {userUpdateAction} from "../../store/user/user.action";
 
 @Component({
   selector: 'app-registration',
@@ -30,6 +33,7 @@ export class RegistrationComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private udService: UserDataService,
+              private store: Store,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -72,16 +76,19 @@ export class RegistrationComponent implements OnInit {
   public saveSetting() {
     this.calculateCalories();
 
-    this.udService.gender = this.gender = this.regForm.get('gender')?.value;
-    this.udService.weightkg = this.weight = this.regForm.get('weight')?.value;
-    this.udService.heightCm = this.height = this.regForm.get('height')?.value;
-    this.udService.minCal = this.minCal;
-    this.udService.maxCal = this.maxCal;
-    this.udService.fats =  this.regForm.get('fats')?.value;
-    this.udService.proteins =  this.regForm.get('protein')?.value;
-    this.udService.carbohydrates =  this.regForm.get('carbohydrates')?.value;
+    const user: IUser = {
+      carbohydrates: Math.abs(this.regForm.get('carbohydrates')?.value),
+      fats: Math.abs(this.regForm.get('fats')?.value),
+      gender: this.regForm.get('gender')?.value,
+      heightCm: Math.abs(this.regForm.get('height')?.value),
+      maxCal: Math.abs(this.maxCal),
+      minCal: Math.abs(this.minCal),
+      proteins: Math.abs(this.regForm.get('protein')?.value),
+      weightkg: Math.abs(this.regForm.get('weight')?.value)
 
-    this.udService.saveUser();
+    }
+
+    this.store.dispatch(userUpdateAction({user}))
     this.router.navigate(['/calendar']);
   }
 }

@@ -6,6 +6,8 @@ import {findMeal} from "../../shared/consts/findMeal";
 import {Months} from "../../shared/consts/months";
 import {TitleCasePipe} from "@angular/common";
 import {UserDataService} from "../../user-data.service";
+import {Store} from "@ngrx/store";
+import {removeMealAction} from "../../store/calendar/calendar.action";
 
 @Component({
   selector: 'app-view-meal',
@@ -13,7 +15,7 @@ import {UserDataService} from "../../user-data.service";
   styleUrls: ['./view-meal.component.scss', '../registration/registration.component.scss', '../custom-control/custom-control.component.scss']
 })
 export class ViewMealComponent implements OnInit {
-  private date: string = this.activeRoute.snapshot.params['day']
+  private date: Date = this.activeRoute.snapshot.params['date']
   private time: string = this.activeRoute.snapshot.params['time'];
   private meal?: ICalendarCell = findMeal(this.date, this.time, this.cService.mealsArr);
 
@@ -35,6 +37,7 @@ export class ViewMealComponent implements OnInit {
 
   constructor(private activeRoute: ActivatedRoute,
               private router: Router,
+              private store: Store,
               private cService: CalendarService,
               private udService: UserDataService) { }
 
@@ -42,19 +45,19 @@ export class ViewMealComponent implements OnInit {
     if(this.isDayView){
       this.fats = this.protein = this.carbohydrates = this.kcal = 0;
 
-      let month = this.date.substr(0,2);
-      const day = this.date.substr(3, 2)
-      const currentDay = new Date().toLocaleDateString().substr(0,2);
-      const currentMonth = new Date().toLocaleDateString().substr(3,2);
+      const month = this.date.getMonth();
+      const day = this.date.getDate();
+      const currentMonth = new Date().getMonth();
+      const currentDay = new Date().getDate();
 
       if(currentDay === day &&
         currentMonth === month) {
         this.title = 'Today';
       } else{
-        month = Months[+month-1];
-        month = (month.substr(0, 1).toUpperCase())+(month.substr(1));
+        let header = Months[+month];
+        header = (header.substr(0, 1).toUpperCase())+(header.substr(1));
 
-        this.title = `${month} ${day}`
+        this.title = `${header}-${day}`
       }
 
       this.cService.mealsArr.forEach( value => {
@@ -62,26 +65,30 @@ export class ViewMealComponent implements OnInit {
       });
 
       this.meals.forEach( value => {
-        //@ts-ignore
-        this.fats = this.fats + (+value.fats);
-        //@ts-ignore
-        this.protein = this.protein + (+value.proteins);
-        //@ts-ignore
-        this.carbohydrates = this.carbohydrates + (+value.carbohydrates);
-        //@ts-ignore
-        this.kcal = this.kcal + (+value.kcal);
+        // @ts-ignore
+        this.fats += (+value.fats);
+        // @ts-ignore
+        this.protein += (+value.proteins);
+        // @ts-ignore
+        this.carbohydrates += (+value.carbohydrates);
+        // @ts-ignore
+        this.kcal += (+value.kcal);
       } )
     }
 
   }
 
   public deleteMeal(): void {
-    this.cService.deleteMeal(this.date, this.time);
+    // this.cService.deleteMeal(this.date, this.time);
+
+    this.store.dispatch(removeMealAction({date: this.date, time: this.time}));
     this.router.navigate(['/calendar']);
   }
 
   public deleteMealFromList(meal: ICalendarCell): void {
+    // this.cService.deleteMeal(meal.date, meal.time);
+
+    this.store.dispatch(removeMealAction({date: meal.date, time: meal.time}));
     this.meals = this.meals.filter(obj => obj !== meal)
-    this.cService.deleteMeal(meal.date, meal.time);
   }
 }

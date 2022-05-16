@@ -9,11 +9,11 @@ export class SelectedMonthService {
   public select: BehaviorSubject<string> = new BehaviorSubject<string>( Months[(new Date()).getMonth()]  )
   constructor() {}
 
-  public getMonth(month: string): string{
-    month = (Months.indexOf(month)+1).toString();
+  public getMonth(month: number): string{
+    let res = (Months[month+1]).toString();
     if (+month < 10){
-      month = '0'+month;
+      res = '0'+month;
     }
-    return month;
+    return res;
   }
 }

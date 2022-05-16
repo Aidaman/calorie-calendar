@@ -1,10 +1,10 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {CalendarService} from "../../calendar/calendar.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
-import {toBase64String} from "@angular/compiler/src/output/source_map";
-import {IUser} from "../../user-data.service";
+import {Store} from "@ngrx/store";
+import {addMealAction} from "../../store/calendar/calendar.action";
 
 //FileReader
 
@@ -14,7 +14,7 @@ import {IUser} from "../../user-data.service";
   styleUrls: ['./add-meal.component.scss', '../registration/registration.component.scss', '../custom-control/custom-control.component.scss']
 })
 export class AddMealComponent implements OnInit {
-  private date: string = this.activeRoute.snapshot.params['day'];
+  private date: Date = this.activeRoute.snapshot.params['date'];
   private time: string = this.activeRoute.snapshot.params['time'];
   public img: string = '';
 
@@ -30,7 +30,8 @@ export class AddMealComponent implements OnInit {
   });
 
   constructor(private activeRoute: ActivatedRoute,
-              private cService: CalendarService ) { }
+              private cService: CalendarService,
+              private store: Store) { }
 
   ngOnInit(): void {
     this.signupForm.get('time')?.setValue(this.time);
@@ -38,22 +39,21 @@ export class AddMealComponent implements OnInit {
 
   public saveMeal(): void {
     if (this.signupForm.valid){
-      const newCell: ICalendarCell = {
-        carbohydrates: this.signupForm.get('carbohydrates')?.value,
+      const meal: ICalendarCell = {
+        carbohydrates: Math.abs(this.signupForm.get('carbohydrates')?.value),
         date: this.date,
-        fats: this.signupForm.get('fats')?.value,
+        fats: Math.abs(this.signupForm.get('fats')?.value),
         id: this.cService.mealsArr.length+1,
-        kcal: this.signupForm.get('kcal')?.value,
-        proteins: this.signupForm.get('protein')?.value,
+        kcal: Math.abs(this.signupForm.get('kcal')?.value),
+        proteins: Math.abs(this.signupForm.get('protein')?.value),
         time: this.signupForm.get('time')?.value.substr(0, 2)+':00',
         title: this.signupForm.get('title')?.value,
         image: this.signupForm.get('image')?.value
       }
-      console.log(newCell);
-      this.cService.mealsArr.push(newCell);
-      this.cService.addNewMeal(newCell);
+      // this.cService.mealsArr.push(newCell);
+      // this.cService.addNewMeal(newCell);
+      this.store.dispatch(addMealAction({meal}));
       this.signupForm.reset();
-      console.log(this.cService.mealsArr)
 
 
     }

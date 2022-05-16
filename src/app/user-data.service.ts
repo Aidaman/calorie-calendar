@@ -1,15 +1,6 @@
 import {Injectable} from "@angular/core";
-
-export interface IUser{
-  gender: string ;
-  heightCm: number;
-  weightkg: number;
-  minCal: number;
-  maxCal: number;
-  fats: number;
-  proteins: number;
-  carbohydrates: number;
-}
+import {IUser} from "./shared/interfaces/user";
+import {Observable, of, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root',
@@ -29,32 +20,28 @@ export class UserDataService {
     this.loadUser();
   }
 
-  public loadUser(): void{
+  public loadUser(): Observable<IUser>{
     if(localStorage.getItem('user')){
       const user: IUser = JSON.parse(localStorage.getItem('user') as string);
-
-      this.gender = user.gender;
-      this.heightCm = user.heightCm;
-      this.weightkg = user.weightkg;
-      this.minCal = user.minCal;
-      this.maxCal = user.maxCal;
-      this.proteins = user.proteins;
-      this.fats = user.fats;
-      this.carbohydrates = user.carbohydrates;
-    }
+      return of(user);
+    } else return throwError('Error Handle');
   }
 
-  public saveUser(): void{
-    const newUser: IUser = {
-      carbohydrates: this.carbohydrates,
-      fats: this.fats,
-      gender: this.gender,
-      heightCm: this.heightCm,
-      maxCal: this.maxCal,
-      minCal: this.minCal,
-      proteins: this.proteins,
-      weightkg: this.weightkg
-    };
-    localStorage.setItem('user', JSON.stringify(newUser));
+  public saveUser(user: IUser | null): Observable<IUser>{
+    if (user && user.heightCm !== 0 && user.weightkg !== 0){
+      const newUser: IUser = {
+        carbohydrates: user.carbohydrates,
+        fats: user.fats,
+        gender: user.gender,
+        heightCm: user.heightCm,
+        maxCal: user.maxCal,
+        minCal: user.minCal,
+        proteins: user.proteins,
+        weightkg: user.weightkg
+      };
+      localStorage.setItem('user', JSON.stringify(newUser));
+      return of(newUser);
+    }
+    else return throwError('Error Handle');
   }
 }
