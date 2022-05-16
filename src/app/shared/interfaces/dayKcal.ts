@@ -1,4 +1,4 @@
 export interface IdayKcals {
-  date: string;
+  date: Date;
   amount: number;
 }

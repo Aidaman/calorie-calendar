@@ -12,9 +12,9 @@ const routes: Routes = [
   {path: 'calendar', component: CalendarComponent, children: [
       {path: '', component: CalendarGridComponent},
       // {path: ':day/watch', component: ViewDayComponent},
-      {path: ':day/:time/add', component: AddMealComponent},
-      {path: ':day/:time/view', component: ViewMealComponent},
-      {path: ':day/:time/:isDayView/view', component: ViewMealComponent},
+      {path: ':date/:time/add', component: AddMealComponent},
+      {path: ':date/:time/view', component: ViewMealComponent},
+      {path: ':date/:time/:isDayView/view', component: ViewMealComponent},
     ]},
   {path: 'registration', component: RegistrationComponent},
 

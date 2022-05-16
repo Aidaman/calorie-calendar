@@ -10,7 +10,7 @@ export class HandleKcalPipe implements PipeTransform {
 
   constructor(private cCervice: CalendarService) {}
 
-  transform(date: string): IdayKcals | undefined {
+  transform(date: Date): IdayKcals | undefined {
     return findKCal(date, this.cCervice.generateTotalCaloriesArr());
   }
 
