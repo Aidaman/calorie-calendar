@@ -12,7 +12,10 @@ export class AddMealsEffect {
     ofType(addMealAction),
     switchMap(({meal})=>{
       return this.mealsService.addNewMeal(meal).pipe(
-        map( (meals) => addMealSuccessAction({meals: meals})),
+        map( (meals) => {
+          console.log('added')
+          return addMealSuccessAction({meals: meals})
+        }),
         catchError( ()=> of(addMealFailureAction)),
       )
     })

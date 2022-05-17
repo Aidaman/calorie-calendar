@@ -16,4 +16,12 @@ export class SelectedMonthService {
     }
     return res;
   }
+
+  public changeMonth(monday: Date, sunday: Date){
+    if (monday.getMonth() < sunday.getMonth()){
+      this.select.next(Months[monday.getMonth()]);
+    } else{
+      this.select.next(Months[sunday.getMonth()]);
+    }
+  }
 }

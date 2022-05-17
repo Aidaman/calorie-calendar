@@ -2,9 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {Months} from "../../../shared/consts/months";
 import {SelectedMonthService} from "../../calendar-select/selected-month.service";
 import {CalendarService} from "../../calendar.service";
-import {WeekControlService} from "./week-control.service";
 import {Router} from "@angular/router";
-import {decrease, generateDaysArr, increase} from 'src/app/shared/consts/generate-week';
+import {decreaseWeek, generateDaysArr, increaseWeek} from 'src/app/shared/consts/generate-week';
 
 @Component({
   selector: 'app-week-control',
@@ -18,25 +17,26 @@ export class WeekControlComponent{
 
   // public isActive = this.week === new Date()
 
-  constructor(private weekCtrlService: WeekControlService,
-              private selectedMonth: SelectedMonthService,
+  constructor(private selectedMonth: SelectedMonthService,
               private router: Router,
               private calendarService: CalendarService) {
   }
 
   public decrease(): void {
-    this.week.next(decrease(this.week.value[0]));
+    this.week.next(decreaseWeek(this.week.value[0]));
+    this.selectedMonth.changeMonth(this.week.value[0], this.week.value[6]);
   }
 
   public increase(): void {
-    this.week.next(increase(this.week.value[0]));
+    this.week.next(increaseWeek(this.week.value[0]));
+    this.selectedMonth.changeMonth(this.week.value[0], this.week.value[6]);
   }
 
   public dayClick(weekday: Date): void {
-      const sMonth = this.selectedMonth.getMonth(weekday.getMonth());
-      const sDate = weekday.getDate();
-      // const sDate = weekday.getDate() > 9? weekday.getDate() : '0'+weekday.getDate();
-      this.router.navigate(['calendar', sMonth+'-'+sDate, '12:00', 'day', 'view'])
+    const sMonth = weekday.getMonth() > 9? weekday.getMonth() : '0'+weekday.getMonth();
+    const sDate = weekday.getDate() > 9? weekday.getDate() : '0'+weekday.getDate();
+    const navigationDate = `${weekday.getDate()}-${sMonth}-${weekday.getFullYear()}`;
+      this.router.navigate(['/calendar', navigationDate.toString(), 'view']);
   }
 
   public onMonthChanged(e: string): void {
@@ -48,8 +48,7 @@ export class WeekControlComponent{
   }
 
   public isDayActive(weekday: Date): boolean{
-    const weekdayDate = new Date(weekday.getFullYear(), weekday.getMonth(), weekday.getDate()) ;
-    console.log(this.newDate === weekdayDate)
+    const weekdayDate = new Date(weekday.getFullYear(), weekday.getMonth(), weekday.getDate());
     return weekdayDate === this.newDate;
   }
 }

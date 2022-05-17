@@ -9,7 +9,7 @@ import {ICalendarCell} from "../interfaces/calendar-cell.interface";
 export class HandleOutputPipe implements PipeTransform {
   constructor(private cCervice: CalendarService) {}
 
-  transform(date: Date, time: string = '', array: ICalendarCell[] = this.cCervice.mealsArr): ICalendarCell | undefined {
+  transform(date: Date, time: string = '', array: ICalendarCell[] = this.cCervice.getMeals()): ICalendarCell | undefined {
     return findMeal(date, time, array);
   }
 

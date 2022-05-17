@@ -4,12 +4,11 @@ import {HoursEnum} from "../../shared/consts/hours.enum";
 import {CalendarService} from "../calendar.service";
 import {SelectedMonthService} from "../calendar-select/selected-month.service";
 import {Router} from "@angular/router";
-import {WeekControlService} from "./week-control/week-control.service";
 import {Store} from "@ngrx/store";
 import {loadMealAction} from "../../store/calendar/calendar.action";
 import {Observable} from "rxjs";
 import {mealsArrSelector} from "../../store/calendar/selectors";
-import {decrease, increase } from 'src/app/shared/consts/generate-week';
+import {decreaseWeek, generateDaysArr, increaseWeek} from 'src/app/shared/consts/generate-week';
 
 
 @Component({
@@ -28,11 +27,11 @@ export class CalendarGridComponent implements OnInit {
   constructor(private cService: CalendarService,
               private router: Router,
               private store: Store,
-              private weekControlService: WeekControlService,
               public selectedMonth: SelectedMonthService) { }
 
   ngOnInit(): void {
-    this.store.dispatch(loadMealAction())
+    this.store.dispatch(loadMealAction());
+    this.cService.week.next(generateDaysArr(new Date(new Date().setDate( new Date().getDate() - new Date().getDay()+1) )));
   }
 
   // public days: Observable<ICalendarCell[]> = this.store.select(mealsArrSelector).pipe(
@@ -48,22 +47,24 @@ export class CalendarGridComponent implements OnInit {
   // );
 
   navigateFilledCell(date: Date, time: string) {
-    this.router.navigate(['calendar', date, time, 'view']);
-    // this.router.navigate(['calendar', `${date.getMonth()}-${date.getDate()}`, time, 'view']);
+    const sMonth = date.getMonth() > 9? date.getMonth() : '0'+date.getMonth();
+    const navigationDate = `${date.getDate()}-${sMonth}-${date.getFullYear()}`;
+    this.router.navigate(['/calendar', navigationDate.toString(), time, 'view']);
   }
 
   navigateEmptyCell(date: Date, time: string) {
-    this.router.navigate(['calendar', `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`, time, 'add']);
-    // this.router.navigate(['calendar', `${date.getMonth()}-${date.getDate()}`, time, 'add']);
+    const sMonth = date.getMonth() > 9? date.getMonth() : '0'+date.getMonth();
+    const navigationDate = `${date.getDate()}-${sMonth}-${date.getFullYear()}`
+    this.router.navigate(['/calendar', navigationDate.toString(), time, 'add']);
   }
 
   public increase(): void {
-    // this.weekControlService.increase();
-    this.week.next(increase(this.week.value[0]));
+    this.week.next(increaseWeek(this.week.value[0]));
+    this.selectedMonth.changeMonth(this.week.value[0], this.week.value[6]);
   }
 
   public decrease(): void {
-    // this.weekControlService.decrease();
-    this.week.next(decrease(this.week.value[0]));
+    this.week.next(decreaseWeek(this.week.value[0]));
+    this.selectedMonth.changeMonth(this.week.value[0], this.week.value[6]);
   }
 }

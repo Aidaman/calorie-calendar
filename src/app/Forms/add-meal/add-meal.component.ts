@@ -51,7 +51,7 @@ export class AddMealComponent implements OnInit {
         image: this.signupForm.get('image')?.value
       }
       // this.cService.mealsArr.push(newCell);
-      // this.cService.addNewMeal(newCell);
+      // this.cService.addNewMeal(meal);
       this.store.dispatch(addMealAction({meal}));
       this.signupForm.reset();
 

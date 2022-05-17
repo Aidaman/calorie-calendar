@@ -10,14 +10,14 @@ export function generateDaysArr(monday: Date): Date[] {
   return days;
 }
 
-export function decrease(monday: Date): Date[]{
+export function decreaseWeek(monday: Date): Date[]{
   const param = new Date(monday.setDate(monday.getDate() - monday.getDay()-6));
-  console.log('decrease param', param);
+  console.log('decreaseWeek param', param);
   return generateDaysArr(param);
 }
 
-export function increase(monday: Date): Date[]{
+export function increaseWeek(monday: Date): Date[]{
   const param = new Date(monday.setDate(monday.getDate() - monday.getDay()+8));
-  console.log('increase param', param);
+  console.log('increaseWeek param', param);
   return generateDaysArr(param);
 }

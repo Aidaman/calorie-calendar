@@ -4,7 +4,6 @@ import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
 import {CalendarService} from "../../calendar/calendar.service";
 import {findMeal} from "../../shared/consts/findMeal";
 import {Months} from "../../shared/consts/months";
-import {TitleCasePipe} from "@angular/common";
 import {UserDataService} from "../../user-data.service";
 import {Store} from "@ngrx/store";
 import {removeMealAction} from "../../store/calendar/calendar.action";
@@ -15,11 +14,12 @@ import {removeMealAction} from "../../store/calendar/calendar.action";
   styleUrls: ['./view-meal.component.scss', '../registration/registration.component.scss', '../custom-control/custom-control.component.scss']
 })
 export class ViewMealComponent implements OnInit {
-  private date: Date = this.activeRoute.snapshot.params['date']
-  private time: string = this.activeRoute.snapshot.params['time'];
-  private meal?: ICalendarCell = findMeal(this.date, this.time, this.cService.mealsArr);
+  private date: string = this.activeRoute.snapshot.params['date']
+  public time: string = this.activeRoute.snapshot.params['time'];
+  private fulldate: Date = new Date(+this.date.substr(6, 4), +this.date.substr(3, 2), +this.date.substr(0,2));
 
-  public isDayView: boolean = this.activeRoute.snapshot.params['isDayView'] !== undefined
+  // public isDayView: boolean = this.activeRoute.snapshot.params['isDayView'] !== undefined
+  private meal?: ICalendarCell = findMeal(this.fulldate, this.time, this.cService.mealsArr);
 
   public title?: string = this.meal?.title;
   public kcal?: number = this.meal?.kcal;
@@ -42,26 +42,30 @@ export class ViewMealComponent implements OnInit {
               private udService: UserDataService) { }
 
   ngOnInit(): void {
-    if(this.isDayView){
+    if(!this.time){
       this.fats = this.protein = this.carbohydrates = this.kcal = 0;
 
-      const month = this.date.getMonth();
-      const day = this.date.getDate();
+      const month = +this.date.substr(3, 2);
+      const day = +this.date.substr(0,2);
       const currentMonth = new Date().getMonth();
       const currentDay = new Date().getDate();
+      // console.log(month, day, currentMonth, currentDay);
 
       if(currentDay === day &&
         currentMonth === month) {
         this.title = 'Today';
       } else{
-        let header = Months[+month];
+        let header = Months[month];
         header = (header.substr(0, 1).toUpperCase())+(header.substr(1));
 
         this.title = `${header}-${day}`
       }
 
       this.cService.mealsArr.forEach( value => {
-        if(value.date === this.date) this.meals.push(value);
+        console.log(value.date.toString(), this.date);
+        if(value.date.toString() === this.date) {
+          this.meals.push(value);
+        }
       });
 
       this.meals.forEach( value => {
@@ -81,7 +85,7 @@ export class ViewMealComponent implements OnInit {
   public deleteMeal(): void {
     // this.cService.deleteMeal(this.date, this.time);
 
-    this.store.dispatch(removeMealAction({date: this.date, time: this.time}));
+    this.store.dispatch(removeMealAction({date: this.fulldate, time: this.time}));
     this.router.navigate(['/calendar']);
   }
 
