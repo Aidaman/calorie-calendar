@@ -3,7 +3,7 @@
   <h2 class="subtitle">Your shape asistant</h2>
   <img class="app__logo" src="assets/img/logo.png" alt="LoGa">
   <div class="container" style="max-width: 550px">
-<!--    <h2 class="text-center mb-5">Angular Login with Google</h2>-->
+    <!--    <h2 class="text-center mb-5">Angular Login with Google</h2>-->
     <div *ngIf="isLoggedin === false">
       <div class="signin">
         <button type="button" (click)="loginWithGoogle()" class="btn btn-primary">
@@ -25,8 +25,11 @@
         <label>Email</label>
         <input type="text" class="form-control" [value]="socialUser.email" id="email" readonly>
       </div>
-      <button type="button" (click)="logOut()" class="btn btn-primary">Log Out</button>
-      <button type="button" [routerLink]="['/registration']" class="btn btn-primary">continue</button>
+      <div class="wrapper">
+        <button type="button" (click)="logOut()" class="btn btn-danger">Log Out</button>
+        <button type="button" [routerLink]="['/profile']" class="btn btn-primary">Continue</button>
+      </div>
     </div>
   </div>
 </div>
+

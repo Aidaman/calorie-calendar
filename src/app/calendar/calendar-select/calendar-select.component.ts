@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {Component, ElementRef, HostListener, Input} from '@angular/core';
 import {SelectedMonthService} from "./selected-month.service";
 
 @Component({
@@ -8,7 +8,6 @@ import {SelectedMonthService} from "./selected-month.service";
 })
 export class CalendarSelectComponent {
   @Input() data: string[] = [];
-  @Output() changeMonth: EventEmitter<string> = new EventEmitter<string>();
 
   public selectIsOpen: boolean = false;
   public selectedOption = this.selection.select;
@@ -19,8 +18,6 @@ export class CalendarSelectComponent {
   changeSelected(month: string): void {
     this.selection.select.next(month);
     this.selectIsOpen = false;
-
-    this.changeMonth.next(month);
   }
 
   @HostListener("document:click", ["$event"])

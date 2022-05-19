@@ -9,7 +9,7 @@ import {userLoginAction} from "../store/user/user.action";
 @Component({
   selector: 'app-start-page',
   templateUrl: './start-page.component.html',
-  styleUrls: ['./start-page.component.scss', '../../../node_modules/bootstrap/dist/css/bootstrap.css']
+  styleUrls: ['./start-page.component.scss']
 })
 export class StartPageComponent implements OnInit {
   loginForm!: FormGroup;
@@ -41,7 +41,7 @@ export class StartPageComponent implements OnInit {
     if(!localStorage.getItem('user')){
       this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
     } else{
-      this.router.navigate(['/registration'])
+      this.router.navigate(['/profile'])
     }
 
   }

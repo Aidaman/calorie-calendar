@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {CalendarComponent} from "./calendar/calendar.component";
 import {StartPageComponent} from "./start-page/start-page.component";
-import {RegistrationComponent} from "./Forms/registration/registration.component";
+import {UserProfileComponent} from "./Forms/user-profile/user-profile.component";
 import {AddMealComponent} from "./Forms/add-meal/add-meal.component";
 import {ViewMealComponent} from "./Forms/view-meal/view-meal.component";
 import {CalendarGridComponent} from "./calendar/callendar-grid/calendar-grid.component";
@@ -16,7 +16,7 @@ const routes: Routes = [
       {path: ':date/:time/view', component: ViewMealComponent},
       {path: ':date/view', component: ViewMealComponent},
     ]},
-  {path: 'registration', component: RegistrationComponent},
+  {path: 'profile', component: UserProfileComponent},
 
   /*                TEST                 */
   // {path: 'a', component: AddMealComponent},

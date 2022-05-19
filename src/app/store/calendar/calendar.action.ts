@@ -1,16 +1,14 @@
 import {createAction, props} from "@ngrx/store";
 import {ActionTypes} from "../action-types.enum";
-import {IWeekDay} from "../../shared/interfaces/week-day";
 import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
 
-//      >>>Calendar<<<      //
 export const weekChangeAction = createAction(
   ActionTypes.WEEK_CHANGE,
-  props<{week: IWeekDay[]}>()
+  props<{week: Date[]}>()
 )
 export const weekChangeSuccessAction = createAction(
   ActionTypes.WEEK_CHANGE_SUCCESS,
-  props<{week: IWeekDay[]}>()
+  props<{week: Date[]}>()
 )
 export const weekChangeFailureAction = createAction(
   ActionTypes.WEEK_CHANGE_FAILURE,
@@ -40,13 +38,13 @@ export const removeMealFailureAction = createAction(
   ActionTypes.REMOVE_MEAL_FAILURE,
 )
 
-export const loadMealAction = createAction(
+export const loadMealsAction = createAction(
   ActionTypes.MEALS_LOAD,
 )
-export const loadMealSuccessAction = createAction(
+export const loadMealsSuccessAction = createAction(
   ActionTypes.MEALS_LOAD_SUCCESS,
   props<{mealsArr: ICalendarCell[]}>(),
 )
-export const loadMealFailureAction = createAction(
+export const loadMealsFailureAction = createAction(
   ActionTypes.MEALS_LOAD_FAILURE,
 )

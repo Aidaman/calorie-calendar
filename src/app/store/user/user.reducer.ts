@@ -10,12 +10,14 @@ import {IUser} from "../../shared/interfaces/user";
 
 export interface IUserState{
   isLoading: boolean,
-  user: IUser | null
+  user: IUser,
+  hasValue: boolean
 }
 
 const initialUserState: IUserState = {
-  user: null,
+  user: {},
   isLoading: false,
+  hasValue: false,
 }
 
 export const userReducer = createReducer(
@@ -33,6 +35,7 @@ export const userReducer = createReducer(
       ...state,
       user: action.user,
       isLoading: false,
+      hasValue: true,
     })
   }),
   on(userUpdateFailureAction, (state)=> {
@@ -55,6 +58,7 @@ export const userReducer = createReducer(
     return ({
       ...state,
       isLoading: false,
+      hasValue: true,
       user: action.user
     })
   }),

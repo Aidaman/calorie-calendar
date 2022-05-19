@@ -44,6 +44,8 @@
     background: $primary;
 
     .btn{
+      display: flex;
+      align-items: center;
       padding: 0 13px 0 0;
       font-style: normal;
       font-weight: 300;
@@ -60,4 +62,26 @@
     }
   }
 
+}
+
+.form-group{
+  margin-bottom: 16px;
+  .form-control{
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  }
+}
+
+.wrapper{
+  display: flex;
+  justify-content: space-between;
 }

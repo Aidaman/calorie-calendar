@@ -7,11 +7,11 @@ import {ICalendarCell} from "../interfaces/calendar-cell.interface";
   name: 'handlePipe'
 })
 export class HandleOutputPipe implements PipeTransform {
-  constructor(private cCervice: CalendarService) {}
-
-  transform(date: Date, time: string = '', array: ICalendarCell[] = this.cCervice.getMeals()): ICalendarCell | undefined {
+  transform(date: Date, time: string = '', array: ICalendarCell[]): ICalendarCell | undefined {
     return findMeal(date, time, array);
   }
-
+  // transform(value: Map<string, ICalendarCell>, key: string): ICalendarCell | null {
+  //   return value.get(key) ?? null;
+  // }
 }
 

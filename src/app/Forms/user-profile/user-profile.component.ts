@@ -4,26 +4,54 @@ import {UserDataService} from "../../user-data.service";
 import {Router} from "@angular/router";
 import {IUser} from "../../shared/interfaces/user";
 import {Store} from "@ngrx/store";
-import {userUpdateAction} from "../../store/user/user.action";
+import {userLoginAction, userUpdateAction} from "../../store/user/user.action";
+import {Observable, switchMap, tap} from "rxjs";
+import {hasUserValueSelector, userSelector} from "../../store/user/selectors";
+import {map} from "rxjs/operators";
+import {notNegativeValidator} from "../not-negative.validator";
 
 @Component({
-  selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss', "../custom-control/custom-control.component.scss"]
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss', "../custom-control/custom-control.component.scss"]
 })
-export class RegistrationComponent implements OnInit {
+export class UserProfileComponent {
   public regForm: FormGroup = this.fb.group({
     gender: ['male', [Validators.required]],
-    height: [null, [Validators.required]],
-    weight: [null, [Validators.required]],
+    height: [null, [Validators.required, notNegativeValidator]],
+    weight: [null, [Validators.required, notNegativeValidator]],
 
-    minCal: [null, [Validators.required]],
-    maxCal: [null, [Validators.required]],
-    fats: [null, [Validators.required]],
-    protein: [null, [Validators.required]],
-    carbohydrates: [null, [Validators.required]],
+    minCal: [null, [Validators.required, notNegativeValidator]],
+    maxCal: [null, [Validators.required, notNegativeValidator]],
+    fats: [null, [Validators.required, notNegativeValidator]],
+    protein: [null, [Validators.required, notNegativeValidator]],
+    carbohydrates: [null, [Validators.required, notNegativeValidator]],
   });
-  public genders: string[] = ['female','male']
+  public genders: string[] = ['female', 'male']
+
+  public user$: Observable<IUser> = this.store.select(hasUserValueSelector).pipe(
+    switchMap((hasValue: boolean)=>{
+      console.log(hasValue);
+      if (!hasValue){
+        this.store.dispatch(userLoginAction());
+      }
+      return this.store.select(userSelector).pipe(
+        map((user)=>{
+          console.log('Init, user val:', user);
+          this.regForm.get('gender')?.setValue(user?.gender);
+          this.regForm.get('height')?.setValue(user?.heightCm);
+          this.regForm.get('weight')?.setValue(user?.weightkg);
+          this.regForm.get('minCal')?.setValue(user?.minCal);
+          this.regForm.get('maxCal')?.setValue(user?.maxCal);
+          this.regForm.get('protein')?.setValue(user?.proteins);
+          this.regForm.get('fats')?.setValue(user?.fats);
+          this.regForm.get('carbohydrates')?.setValue(user?.carbohydrates);
+          return user;
+        })
+      );
+    }),
+
+  );
 
   private weight: number = this.regForm.get('weight')?.value;
   private height: number = this.regForm.get('height')?.value;
@@ -35,21 +63,6 @@ export class RegistrationComponent implements OnInit {
               private udService: UserDataService,
               private store: Store,
               private router: Router) { }
-
-  ngOnInit(): void {
-    if(localStorage.getItem('user')){
-      const user: IUser = JSON.parse(localStorage.getItem('user') as string);
-
-      this.regForm.get('gender')?.setValue(user.gender);
-      this.regForm.get('height')?.setValue(user.heightCm);
-      this.regForm.get('weight')?.setValue(user.weightkg);
-      this.regForm.get('minCal')?.setValue(user.minCal);
-      this.regForm.get('maxCal')?.setValue(user.maxCal);
-      this.regForm.get('protein')?.setValue(user.proteins);
-      this.regForm.get('fats')?.setValue(user.fats);
-      this.regForm.get('carbohydrates')?.setValue(user.carbohydrates);
-    }
-  }
 
   private calculateBMR(weight: number, height: number, age: number, gender: string): number{
     if(gender.substr(0, 3) === 'fem'){

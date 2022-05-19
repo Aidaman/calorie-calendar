@@ -3,9 +3,9 @@ import {
   addMealAction,
   addMealFailureAction,
   addMealSuccessAction,
-  loadMealAction,
-  loadMealFailureAction,
-  loadMealSuccessAction,
+  loadMealsAction,
+  loadMealsFailureAction,
+  loadMealsSuccessAction,
   removeMealAction,
   removeMealFailureAction,
   removeMealSuccessAction,
@@ -13,63 +13,85 @@ import {
   weekChangeFailureAction,
   weekChangeSuccessAction
 } from "./calendar.action";
-import {IWeekDay} from "../../shared/interfaces/week-day";
 import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
 
 export interface ICalendarState{
-  week: IWeekDay[],
   mealsArr: ICalendarCell[]
+  week: Date[],
+  isLoading: boolean;
+  weekHasValue: boolean;
+  mealsArrHasValue: boolean;
 }
 
 const initialCalendarState: ICalendarState = {
+  mealsArr: [],
   week: [],
-  mealsArr: JSON.parse( localStorage.getItem('meals') as string ) || [],
+  isLoading: false,
+  weekHasValue: false,
+  mealsArrHasValue: false,
 }
 
-export const calendarReducers = createReducer(
+export const calendarReducer = createReducer(
   initialCalendarState,
   on(weekChangeAction, (state, action) => ({
     ...state,
-    week: action.week,
+    isLoading: true,
   })),
   on(weekChangeSuccessAction, (state, action) => ({
     ...state,
     week: action.week,
+    isLoading: false,
+    weekHasValue: true,
   })),
   on(weekChangeFailureAction, (state) => ({
     ...state,
+    week: [],
+    isLoading: false,
+    weekHasValue: false,
   })),
 
   on(addMealAction, (state) => ({
     ...state,
+    isLoading: true,
   })),
   on(addMealSuccessAction, (state, action) => ({
     ...state,
+    isLoading: false,
     mealsArr: action.meals,
   })),
   on(addMealFailureAction, (state) => ({
     ...state,
+    mealsArr: [],
+    isLoading: false,
   })),
 
   on(removeMealAction, (state) => ({
     ...state,
+    isLoading: true,
   })),
   on(removeMealSuccessAction, (state, action) => ({
     ...state,
+    isLoading: false,
     mealsArr: action.meals,
   })),
   on(removeMealFailureAction, (state) => ({
     ...state,
+    isLoading: false,
   })),
 
-  on(loadMealAction, (state) => ({
+  on(loadMealsAction, (state) => ({
     ...state,
+    isLoading: true,
   })),
-  on(loadMealSuccessAction, (state, action) => ({
+  on(loadMealsSuccessAction, (state, action) => ({
     ...state,
+    isLoading: false,
+    mealsArrHasValue: true,
     mealsArr: action.mealsArr,
   })),
-  on(loadMealFailureAction, (state) => ({
+  on(loadMealsFailureAction, (state) => ({
     ...state,
+    mealsArrHasValue: false,
+    isLoading: false,
   })),
 );

@@ -1,15 +1,19 @@
-<div class="header column">
+<div class="header column" *ngIf="user$ | async as user">
   <div class="row-calendar">
     <div class="column">
-      <i class="signup fa fa-gear" [routerLink]="['../registration']"></i>
+      <i class="signup fa fa-gear" [routerLink]="['/profile']"></i>
     </div>
 
     <div class="cells">
-<!--      <span class="cell"-->
-<!--            *ngFor="let weekday of week | async">-->
-<!--        <span [class]="(weekday.date | handleKcal)?.amount | fillPipe">{{ (weekday.date | handleKcal)?.amount }}</span>-->
-<!--      </span>-->
+      <span class="cell"
+            *ngFor="let weekday of week | async">
+          <span class="text-blue">
+            {{(weekday | handleKcal: (meals$ | async))}}
+          </span>
+      </span>
     </div>
 
   </div>
 </div>
+
+<!--[class]="(weekday | handleKcal: meals) | fillPipe: user"-->

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="user$ | async">
   <div class="controls">
     <a class="control" [routerLink]="['/calendar']">Cancel</a>
     <i class="fa fa-arrow-circle-o-right" [routerLink]="['/calendar']"></i>
@@ -58,8 +58,7 @@
 
     <div class="centralise">
       <button class="btn margin-top"
-              [disabled]="regForm.invalid &&
-                          !regForm.dirty"
+              [disabled]="regForm.invalid"
               (click)="saveSetting()">Save Settings</button>
     </div>
 
