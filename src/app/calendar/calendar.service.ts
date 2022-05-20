@@ -1,21 +1,44 @@
 import {Injectable} from "@angular/core";
 import {ICalendarCell} from "../shared/interfaces/calendar-cell.interface";
-import {BehaviorSubject, Observable, of, switchMap, throwError} from "rxjs";
-// import {weekChangeAction} from "../store/calendar/calendar.action";
-// import {Store} from "@ngrx/store";
-// import {hasWeekValueSelector, weekSelector} from "../store/calendar/selectors";
+import {BehaviorSubject, Observable, of, throwError} from "rxjs";
+import { Store } from "@ngrx/store";
+import {decreaseWeek, generateDaysArr, increaseWeek} from "../shared/consts/generate-week";
+import {weekChangeAction} from "../store/calendar/calendar.action";
+import {SelectedMonthService} from "./calendar-select/selected-month.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarService {
   public week: BehaviorSubject<Date[]> = new BehaviorSubject<Date[]>([]);
-  public mealsArr: ICalendarCell[] = this.getMeals()
+  public mealsArr: Observable<ICalendarCell[]> = this.getMealsAsync()
+
+  constructor(private store: Store,
+              public selectedMonth: SelectedMonthService){}
+
+  public weekIncrease(): Date[] {
+    this.week.next(increaseWeek(this.week.value[0]));
+    this.store.dispatch(weekChangeAction({week: this.week.value}));
+    this.selectedMonth.changeMonth(this.week.value[0], this.week.value[6]);
+    return this.week.value
+  }
+  public weekDecrease(): Date[] {
+    this.week.next(decreaseWeek(this.week.value[0]));
+    this.store.dispatch(weekChangeAction({week: this.week.value}));
+    this.selectedMonth.changeMonth(this.week.value[0], this.week.value[6]);
+    return this.week.value
+  }
+  public weekGenerate(monday: Date): Date[] {
+    this.week.next(generateDaysArr(monday));
+    this.store.dispatch(weekChangeAction({week: this.week.value}));
+    this.selectedMonth.changeMonth(this.week.value[0], this.week.value[6]);
+    return this.week.value
+  }
 
   public getMealsAsync(): Observable<ICalendarCell[]>{
     return of(this.getMeals());
   }
-  public getMeals(): ICalendarCell[]{
+  private getMeals(): ICalendarCell[]{
     return JSON.parse( localStorage.getItem('meals') as string ) as ICalendarCell[] || [];
   }
 

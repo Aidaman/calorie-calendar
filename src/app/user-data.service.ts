@@ -1,22 +1,25 @@
 import {Injectable} from "@angular/core";
 import {IUser} from "./shared/interfaces/user";
-import {Observable, of, throwError} from "rxjs";
+import {Observable, of, switchMap, throwError} from "rxjs";
+import {hasUserValueSelector, userSelector} from "./store/user/selectors";
+import {userLoginAction} from "./store/user/user.action";
+import {map} from "rxjs/operators";
+import {Store} from "@ngrx/store";
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserDataService {
-  public gender: string = '';
-  public heightCm: number = 0;
-  public weightkg: number = 0;
+  public user$: Observable<IUser> = this.store.select(hasUserValueSelector).pipe(
+    switchMap((hasValue: boolean)=>{
+      if (!hasValue){
+        this.store.dispatch(userLoginAction());
+      }
+      return this.store.select(userSelector)
+    }),
+  );
 
-  public minCal: number = 0;
-  public maxCal: number = 0;
-  public fats: number = 0;
-  public proteins: number = 0;
-  public carbohydrates: number = 0;
-
-  constructor() {
+  constructor(private store: Store) {
     this.loadUser();
   }
 
@@ -37,7 +40,8 @@ export class UserDataService {
         maxCal: user.maxCal,
         minCal: user.minCal,
         proteins: user.proteins,
-        weightkg: user.weightkg
+        weightkg: user.weightkg,
+        isLoggedIn: true,
       };
       localStorage.setItem('user', JSON.stringify(newUser));
       return of(newUser);

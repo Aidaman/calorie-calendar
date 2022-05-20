@@ -4,6 +4,7 @@ import {ColorFillPipe} from "./pipes/color-fill.pipe";
 import {HandleOutputPipe} from "./pipes/handle-output.pipe";
 import {HandleKcalPipe} from "./pipes/handleKcal.pipe";
 import {ShortPipe} from "./pipes/short.pipe";
+import {FindMealPipe} from "./pipes/find-meal.pipe";
 
 
 
@@ -13,6 +14,7 @@ import {ShortPipe} from "./pipes/short.pipe";
     HandleOutputPipe,
     HandleKcalPipe,
     ShortPipe,
+    FindMealPipe,
   ],
   imports: [
     CommonModule,
@@ -22,6 +24,7 @@ import {ShortPipe} from "./pipes/short.pipe";
     HandleOutputPipe,
     HandleKcalPipe,
     ShortPipe,
+    FindMealPipe,
   ]
 })
 export class SharedModule { }

@@ -25,7 +25,6 @@ export class CalendarEffect{
     switchMap(({meal})=>{
       return this.mealsService.addNewMeal(meal).pipe(
         map( (meals) => {
-          console.log('added')
           return addMealSuccessAction({meals: meals})
         }),
         catchError( ()=> of(addMealFailureAction)),
@@ -54,7 +53,6 @@ export class CalendarEffect{
       switchMap(({date, time})=>{
         return this.mealsService.deleteMeal(date, time).pipe(
           map( (meals) => {
-            console.log('removed');
             return removeMealSuccessAction({meals: meals})
           }),
           catchError( ()=> of(removeMealFailureAction)),

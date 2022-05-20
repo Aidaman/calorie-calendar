@@ -6,9 +6,6 @@ import {IUser} from "../interfaces/user";
   name: 'fillPipe'
 })
 export class ColorFillPipe {
-  constructor(private udService: UserDataService) {
-  }
-
   transform(amount: number = 0, user: IUser): 'text-red' | 'text-yellow' | 'text-blue' {
     if (user.maxCal && user.minCal){
       if ( amount > user.maxCal*1.05){

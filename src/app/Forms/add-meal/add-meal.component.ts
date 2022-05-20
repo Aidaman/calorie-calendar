@@ -42,7 +42,7 @@ export class AddMealComponent implements OnInit {
         carbohydrates: Math.abs(this.form.get('carbohydrates')?.value),
         date: this.date,
         fats: Math.abs(this.form.get('fats')?.value),
-        id: this.cService.mealsArr.length+1,
+        id: Math.floor(Math.random() * (1000000 - 1) + 1),
         kcal: Math.abs(this.form.get('kcal')?.value),
         proteins: Math.abs(this.form.get('protein')?.value),
         time: this.form.get('time')?.value.substr(0, 2)+':00',

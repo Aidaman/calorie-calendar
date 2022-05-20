@@ -14,7 +14,7 @@ const routes: Routes = [
       // {path: ':day/watch', component: ViewDayComponent},
       {path: ':date/:time/add', component: AddMealComponent},
       {path: ':date/:time/view', component: ViewMealComponent},
-      {path: ':date/view', component: ViewMealComponent},
+      {path: ':date/:time/:isDay/view', component: ViewMealComponent},
     ]},
   {path: 'profile', component: UserProfileComponent},
 

@@ -1,7 +1,5 @@
-<!--<div class="stick-header" *ngIf="columns$ | async as columns">-->
-<div class="stick-header">
-<!--  <app-calendar-header [columns]="columns"></app-calendar-header>-->
-  <app-calendar-header></app-calendar-header>
+<div class="stick-header" *ngIf="columns$ | async as columns">
+  <app-calendar-header [columns]="columns"></app-calendar-header>
   <app-week-control></app-week-control>
 </div>
 <div class="row-calendar">
@@ -9,24 +7,46 @@
     <span class="hour" *ngFor="let hour of hours">{{hour}}</span>
   </div>
   <div class="calendar-grid" (swipeleft)="increase()" (swiperight)="decrease()">
-    <ng-container *ngIf="meals$ | async as meals">
-      <span *ngFor="let date of week | async">
-        <span *ngFor="let hour of hours">
-          <span *ngIf="(date | handlePipe:hour:meals) as cell; else empty">
-             <div class="calendar-grid__child active" (click)="navigateFilledCell(cell.date, hour)">
-               <div class="cell-title">
-                 {{cell.title | shortTitle}}
-               </div>
-               <div class="cell-info">
-                 {{cell.kcal}}
-               </div>
-             </div>
-          </span>
+    <span *ngFor="let date of week$ | async">
+      <span *ngFor="let hour of hours">
+        <ng-container *ngIf="columns$ | async as columns">
+          <div class="calendar-grid__child active"
+               *ngIf="(columns | handlePipe: hour: date) as cell; else empty"
+               (click)="navigateFilledCell(cell.date, cell.time)">
+            <div class="cell-title">
+              {{cell.title | shortTitle}}
+            </div>
+            <div class="cell-info">
+              {{cell.kcal}}
+            </div>
+          </div>
           <ng-template #empty>
             <div class="calendar-grid__child" (click)="navigateEmptyCell(date, hour)"></div>
           </ng-template>
-        </span>
+        </ng-container>
       </span>
-    </ng-container>
+    </span>
   </div>
 </div>
+
+
+<!--<ng-container *ngFor="let column of columns$ | async">-->
+<!--  <span *ngFor="let hour of hours">-->
+<!--          <span *ngIf="(column.meals | handlePipe:hour) as cell; else empty">-->
+<!--             <div class="calendar-grid__child active" (click)="navigateFilledCell(column.date, hour)">-->
+<!--               <div class="cell-title">-->
+<!--                 {{cell.title | shortTitle}}-->
+<!--               </div>-->
+<!--               <div class="cell-info">-->
+<!--                 {{cell.kcal}}-->
+<!--               </div>-->
+<!--             </div>-->
+<!--          </span>-->
+<!--          <ng-template #empty>-->
+<!--            <div class="calendar-grid__child" (click)="navigateEmptyCell(column.date, hour)">-->
+<!--              {{getValidDate(column.date)}}-->
+<!--              {{hour}}-->
+<!--            </div>-->
+<!--          </ng-template>-->
+<!--        </span>-->
+<!--</ng-container>-->

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserDataService} from "../../user-data.service";
 import {Router} from "@angular/router";
@@ -29,29 +29,18 @@ export class UserProfileComponent {
   });
   public genders: string[] = ['female', 'male']
 
-  public user$: Observable<IUser> = this.store.select(hasUserValueSelector).pipe(
-    switchMap((hasValue: boolean)=>{
-      console.log(hasValue);
-      if (!hasValue){
-        this.store.dispatch(userLoginAction());
-      }
-      return this.store.select(userSelector).pipe(
-        map((user)=>{
-          console.log('Init, user val:', user);
-          this.regForm.get('gender')?.setValue(user?.gender);
-          this.regForm.get('height')?.setValue(user?.heightCm);
-          this.regForm.get('weight')?.setValue(user?.weightkg);
-          this.regForm.get('minCal')?.setValue(user?.minCal);
-          this.regForm.get('maxCal')?.setValue(user?.maxCal);
-          this.regForm.get('protein')?.setValue(user?.proteins);
-          this.regForm.get('fats')?.setValue(user?.fats);
-          this.regForm.get('carbohydrates')?.setValue(user?.carbohydrates);
-          return user;
-        })
-      );
-    }),
-
-  );
+  public user$: Observable<IUser> = this.udService.user$.pipe(
+    map((user) => {
+      this.regForm.get('gender')?.setValue(user?.gender);
+      this.regForm.get('height')?.setValue(user?.heightCm);
+      this.regForm.get('weight')?.setValue(user?.weightkg);
+      this.regForm.get('minCal')?.setValue(user?.minCal);
+      this.regForm.get('maxCal')?.setValue(user?.maxCal);
+      this.regForm.get('protein')?.setValue(user?.proteins);
+      this.regForm.get('fats')?.setValue(user?.fats);
+      this.regForm.get('carbohydrates')?.setValue(user?.carbohydrates);
+      return user;
+    }));
 
   private weight: number = this.regForm.get('weight')?.value;
   private height: number = this.regForm.get('height')?.value;
@@ -62,17 +51,18 @@ export class UserProfileComponent {
   constructor(private fb: FormBuilder,
               private udService: UserDataService,
               private store: Store,
-              private router: Router) { }
+              private router: Router) {
+  }
 
-  private calculateBMR(weight: number, height: number, age: number, gender: string): number{
-    if(gender.substr(0, 3) === 'fem'){
+  private calculateBMR(weight: number, height: number, age: number, gender: string): number {
+    if (gender.substr(0, 3) === 'fem') {
       return 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
-    } else{
+    } else {
       return 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
     }
   }
 
-  public calculateCalories(){
+  public calculateCalories() {
     this.weight = this.regForm.get('weight')?.value;
     this.height = this.regForm.get('height')?.value;
     this.gender = this.regForm.get('gender')?.value;
@@ -81,9 +71,9 @@ export class UserProfileComponent {
 
     this.regForm.get('minCal')?.setValue(this.minCal);
     this.regForm.get('maxCal')?.setValue(this.maxCal);
-    this.regForm.get('fats')?.setValue(((this.minCal*0.30)/9).toFixed(2));
-    this.regForm.get('protein')?.setValue(((this.minCal*0.15)/4).toFixed(2));
-    this.regForm.get('carbohydrates')?.setValue(( ((this.minCal*0.15)/2)/4).toFixed(2));
+    this.regForm.get('fats')?.setValue(((this.minCal * 0.30) / 9).toFixed(2));
+    this.regForm.get('protein')?.setValue(((this.minCal * 0.15) / 4).toFixed(2));
+    this.regForm.get('carbohydrates')?.setValue((((this.minCal * 0.15) / 2) / 4).toFixed(2));
   }
 
   public saveSetting() {
@@ -97,11 +87,15 @@ export class UserProfileComponent {
       maxCal: Math.abs(this.maxCal),
       minCal: Math.abs(this.minCal),
       proteins: Math.abs(this.regForm.get('protein')?.value),
-      weightkg: Math.abs(this.regForm.get('weight')?.value)
-
+      weightkg: Math.abs(this.regForm.get('weight')?.value),
+      isLoggedIn: true,
     }
 
     this.store.dispatch(userUpdateAction({user}))
     this.router.navigate(['/calendar']);
+  }
+
+  public logOut() {
+
   }
 }

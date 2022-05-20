@@ -1,77 +1,79 @@
-<div class="container">
+<ng-container *ngIf="(meals$ | async) as meals">
+<ng-container *ngIf="(date | findMealPipe:time:meals) as meal">
+
+<div class="container" *ngIf="user$ | async as user">
   <div class="controls">
     <a class="control" [routerLink]="['/calendar']">Cancel</a>
   </div>
 
   <div class="form">
-    <h1 class="form__title">{{title}}</h1>
+    <h1 class="form__title">{{!title? meal.title : title}}</h1>
 
     <div class="section">
       <p class="section__title">Kcal</p>
-      <ng-container *ngIf="time">
-        <p class="amount "
-           type="number"
-           id="kcal">
-          {{kcal}}
+      <ng-container *ngIf="!this.isDay">
+        <p class="amount " >
+          {{meal.kcal}}
         </p>
       </ng-container>
-      <p *ngIf="!time"
-         class="amount "
-           type="number">{{kcal}} / {{userMinKCal}}</p>
-    </div>
-    <div class="section">
-      <p class="section__title">fats (gm)</p>
-      <ng-container *ngIf="time">
-        <p class="amount "
-           type="number"
-           id="fats">
-          {{fats}}
-        </p>
-      </ng-container>
-      <p *ngIf="!time"
-         class="amount "
-           type="number">{{fats}} / {{userFats}}</p>
-    </div>
-    <div class="section">
-      <p class="section__title">Protein (gm)</p>
-      <ng-container *ngIf="time">
-        <p class="amount "
-           type="number"
-           id="Protein">
-          {{protein}}
-        </p>
-      </ng-container>
-      <p *ngIf="!time"
-         class="amount "
-           type="number">{{protein}} / {{userProteins}}</p>
-    </div>
-    <div class="section">
-      <p class="section__title">Carbohydrates (gm)</p>
-      <ng-container *ngIf="time">
-        <p class="amount "
-           type="number"
-           id="Carbohydrates">
-          {{carbohydrates}}
-        </p>
-      </ng-container>
-      <p *ngIf="!time"
-         class="amount "
-         type="number">{{carbohydrates}}{{carbohydrates}} / {{userCarbohydrates}}</p>
-    </div>
-    <div class="section-image" *ngIf="time">
-      <ng-container *ngIf="!img">
-        <i  class="fa fa-image"></i>
-      </ng-container>
-      <img *ngIf="img" [src]="img" alt="" class="test">
+      <p *ngIf="this.isDay"
+         class="amount ">
+        <span [class]="meal.kcal | fillPipe: user">{{meal.kcal}}</span> / {{user.minCal}}
+      </p>
     </div>
 
-    <span class="day-view" *ngIf="!time">
-      <span class=" flex-container" *ngFor="let meal of meals">
-        <div class="btn meal-info" [routerLink]="['/calendar', meal.date, meal.time, 'view']">
-          <p class="meal-info__title"> {{meal.title}} </p>
+    <div class="section">
+      <p class="section__title">fats (gm)</p>
+      <ng-container *ngIf="!this.isDay">
+        <p class="amount " >
+          {{meal.fats}}
+        </p>
+      </ng-container>
+      <p *ngIf="this.isDay"
+         class="amount ">
+        <span [class]="meal.fats | fillPipe: user">{{meal.fats}}</span> / {{user.fats}}</p>
+    </div>
+
+    <div class="section">
+      <p class="section__title">Protein (gm)</p>
+      <ng-container *ngIf="!this.isDay">
+        <p class="amount " >
+          {{meal.proteins}}
+        </p>
+      </ng-container>
+      <p *ngIf="this.isDay"
+         class="amount ">
+        <span [class]="meal.proteins | fillPipe: user">{{meal.proteins}}</span> / {{user.proteins}}
+      </p>
+    </div>
+
+    <div class="section">
+      <p class="section__title">Carbohydrates (gm)</p>
+      <ng-container *ngIf="!this.isDay">
+        <p class="amount" >
+          {{meal.carbohydrates}}
+        </p>
+      </ng-container>
+      <p *ngIf="this.isDay"
+         class="amount">
+        <span [class]="meal.carbohydrates | fillPipe: user">{{meal.carbohydrates}}</span> / {{user.carbohydrates}}
+      </p>
+    </div>
+
+    <div class="section-image" *ngIf="!this.isDay">
+      <ng-container *ngIf="!meal.image">
+        <i  class="fa fa-image"></i>
+      </ng-container>
+      <img *ngIf="meal.image" [src]="meal.image" alt="" class="test">
+    </div>
+
+    <span class="day-view" *ngIf="this.isDay">
+      <span class=" flex-container" *ngFor="let fmeal of generateMealsList(meals)">
+        <div class="btn meal-info" [routerLink]="['/calendar', fmeal.date, fmeal.time, 'view']">
+          <p class="meal-info__title"> {{fmeal.title}} </p>
           <div class="space-between">
-            <p class="bold"> {{meal.kcal}} </p>
-            <p class="bold"> {{meal.time}} </p>
+            <p class="bold"> {{fmeal.kcal}} </p>
+            <p class="bold"> {{fmeal.time}} </p>
           </div>
         </div>
         <button class="btn btn-danger width-25" (click)="deleteMealFromList(meal)"><i class="fa fa-stop-circle-o"></i></button>
@@ -80,3 +82,6 @@
   </div>
   <button *ngIf="time" class="margin-top btn btn-danger" (click)="deleteMeal()">Delete this meal</button>
 </div>
+
+</ng-container>
+</ng-container>

@@ -23,14 +23,12 @@ const initialUserState: IUserState = {
 export const userReducer = createReducer(
   initialUserState,
   on(userUpdateAction, (state)=> {
-    console.log('User update started')
     return ({
       ...state,
       isLoading: true
     })
   }),
   on(userUpdateSuccessAction, (state, action)=> {
-    console.log('User updated successfully')
     return ({
       ...state,
       user: action.user,
@@ -39,7 +37,6 @@ export const userReducer = createReducer(
     })
   }),
   on(userUpdateFailureAction, (state)=> {
-    console.log('User update is unsuccessful')
     return ({
       ...state,
       isLoading: false,
@@ -47,14 +44,12 @@ export const userReducer = createReducer(
   }),
 
   on(userLoginAction, (state)=> {
-    console.log('user login started')
     return ({
       ...state,
       isLoading: true,
     })
   }),
   on(userLoginSuccessAction, (state, action)=> {
-    console.log('user login successful')
     return ({
       ...state,
       isLoading: false,
@@ -63,7 +58,6 @@ export const userReducer = createReducer(
     })
   }),
   on(userLoginFailureAction, (state)=> {
-    console.log('user login UNsuccessful')
     return ({
       ...state,
       isLoading: false,

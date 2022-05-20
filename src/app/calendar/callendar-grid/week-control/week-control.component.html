@@ -1,8 +1,8 @@
 <div class="column">
-  <div class="row">
+  <div class="row" (swiperight)="decrease()" (swipeleft)="increase()">
     <app-calendar-select [data]="months"></app-calendar-select>
         <div class="column"
-             *ngFor="let weekday of week | async"
+             *ngFor="let weekday of week$ | async"
              (click)="dayClick(weekday)">
           <div class="numbers">
             <span class="number" [class.active]="isDayActive(weekday)">{{weekday | date:'dd'}}</span>

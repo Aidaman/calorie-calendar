@@ -32,7 +32,6 @@ export class StartPageComponent implements OnInit {
     this.socialAuthService.authState.subscribe((user) => {
       this.socialUser = user;
       this.isLoggedin = user != null;
-      console.log(this.socialUser);
     });
   }
 

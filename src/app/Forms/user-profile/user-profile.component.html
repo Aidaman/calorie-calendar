@@ -1,7 +1,7 @@
 <div class="container" *ngIf="user$ | async">
   <div class="controls">
     <a class="control" [routerLink]="['/calendar']">Cancel</a>
-    <i class="fa fa-arrow-circle-o-right" [routerLink]="['/calendar']"></i>
+    <i class="fa fa-arrow-circle-o-right" (click)="logOut()" [routerLink]="['/']"></i>
   </div>
 
   <div class="form" [formGroup]="regForm">

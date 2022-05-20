@@ -5,15 +5,12 @@
     </div>
 
     <div class="cells">
-      <span class="cell"
-            *ngFor="let weekday of week | async">
-          <span class="text-blue">
-            {{(weekday | handleKcal: (meals$ | async))}}
+      <span class="cell" *ngFor="let weekday of week | async">
+          <span [class]="(weekday | handleKcal: meals) | fillPipe: user">
+            {{(weekday | handleKcal: meals)}}
           </span>
       </span>
     </div>
 
   </div>
 </div>
-
-<!--[class]="(weekday | handleKcal: meals) | fillPipe: user"-->

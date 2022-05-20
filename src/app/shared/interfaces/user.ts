@@ -1,4 +1,5 @@
 export interface IUser{
+  isLoggedIn?: boolean;
   gender?: string ;
   heightCm?: number;
   weightkg?: number;

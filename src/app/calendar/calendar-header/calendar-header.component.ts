@@ -3,7 +3,8 @@ import {CalendarService} from "../calendar.service";
 import {Store} from "@ngrx/store";
 import {userSelector} from "../../store/user/selectors";
 import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
-import {mealsArrSelector} from "../../store/calendar/selectors";
+import {mealsArrSelector, weekSelector} from "../../store/calendar/selectors";
+import {UserDataService} from "../../user-data.service";
 
 @Component({
   selector: 'app-calendar-header',
@@ -11,9 +12,11 @@ import {mealsArrSelector} from "../../store/calendar/selectors";
   styleUrls: ['./calendar-header.component.scss', "../calendar.component.scss"]
 })
 export class CalendarHeaderComponent {
-  // @Input('columns') meals: { date: Date, meals: Map<string, ICalendarCell> }[] = [];
-  public meals$ = this.store.select(mealsArrSelector);
-  public user$ = this.store.select(userSelector);
-  public week = this.cService.week;
-  constructor(private cService: CalendarService, private store: Store) {}
+  @Input('columns') meals: { date: Date, meals: Map<string, ICalendarCell> }[] = [];
+  public user$ = this.udService.user$;
+  public week = this.store.select(weekSelector);
+
+  constructor(private cService: CalendarService,
+              private store: Store,
+              private udService: UserDataService,) {}
 }
