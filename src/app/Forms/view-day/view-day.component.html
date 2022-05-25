@@ -1,0 +1,61 @@
+<ng-container *ngIf="(meals$ | async) as meals">
+
+    <div class="container" *ngIf="user$ | async as user">
+      <div class="controls">
+        <a class="control" [routerLink]="['/calendar']">Cancel</a>
+      </div>
+
+      <div class="form">
+        <h1 class="form__title">
+          <ng-container *ngIf="+date === +today; else notToday">Today</ng-container>
+          <ng-template #notToday>{{date | date:'EEEE dd MMM'}}</ng-template>
+        </h1>
+
+        <div class="section">
+          <p class="amount ">
+            <span [class]="summaryKCal | fillPipe: user">
+              {{summaryKCal}}
+            </span> / {{user.minCal}}
+          </p>
+        </div>
+
+        <div class="section">
+          <p class="amount ">
+            <span [class]="summaryFats | fillPipe: user">
+              {{summaryFats}}
+            </span> / {{user.fats}}</p>
+        </div>
+
+        <div class="section">
+          <p class="amount ">
+            <span [class]="summaryProtein | fillPipe: user">
+              {{summaryProtein}}
+            </span> / {{user.proteins}}
+          </p>
+        </div>
+
+        <div class="section">
+          <p class="amount">
+            <span [class]="summaryCarbohydrates | fillPipe: user">
+              {{summaryCarbohydrates}}
+            </span> / {{user.carbohydrates}}
+          </p>
+        </div>
+
+        <span class="day-view">
+          <span class=" flex-container" *ngFor="let meal of meals">
+            <div class="btn meal-info" [routerLink]="['/calendar', meal.date, meal.time, 'view']">
+              <p class="meal-info__title"> {{meal.title}} </p>
+              <div class="space-between">
+                <p class="bold"> {{meal.kcal}} </p>
+                <p class="bold"> {{meal.time}} </p>
+              </div>
+            </div>
+            <button class="btn btn-danger width-25" (click)="deleteMealFromList(meal)"><i
+              class="fa fa-stop-circle-o"></i></button>
+          </span>
+        </span>
+      </div>
+    </div>
+
+</ng-container>
