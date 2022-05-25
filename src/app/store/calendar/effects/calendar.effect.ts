@@ -17,15 +17,16 @@ import {catchError, map, switchMap} from "rxjs/operators";
 import {of} from "rxjs";
 import {Store} from "@ngrx/store";
 import {CalendarService} from "../../../calendar/calendar.service";
+import {UserDataService} from "../../../user-data.service";
 
 @Injectable()
 export class CalendarEffect{
-  addMeals$ = createEffect( ()=>this.actions$.pipe(
+  addMeal$ = createEffect( ()=>this.actions$.pipe(
     ofType(addMealAction),
     switchMap(({meal})=>{
-      return this.mealsService.addNewMeal(meal).pipe(
+      return this.mealsService.addNewMeal(meal, this.udService.userId).pipe(
         map( (meals) => {
-          return addMealSuccessAction({meals: meals})
+          return addMealSuccessAction({meal})
         }),
         catchError( ()=> of(addMealFailureAction)),
       )
@@ -38,8 +39,9 @@ export class CalendarEffect{
       switchMap( ()=>{
         return this.mealsService.getMealsAsync().pipe(
           map((mealsArr)=> {
-            console.log('got the meals', mealsArr);
-            return loadMealsSuccessAction({mealsArr})
+            const meals = mealsArr.find((value)=>value.userid === this.udService.userId);
+            //@ts-ignore
+            return loadMealsSuccessAction({id: meals.userid, mealsArr: meals.meals})
           }),
           catchError(()=>of(loadMealsFailureAction()))
         )
@@ -50,10 +52,12 @@ export class CalendarEffect{
   removeMeal$ = createEffect(
     ()=>this.actions$.pipe(
       ofType(removeMealAction),
-      switchMap(({date, time})=>{
-        return this.mealsService.deleteMeal(date, time).pipe(
-          map( (meals) => {
-            return removeMealSuccessAction({meals: meals})
+      switchMap(({id})=>{
+        return this.mealsService.deleteMeal(id, this.udService.userId).pipe(
+          map( (mealsArr) => {
+            const meals = mealsArr.find((value)=>value.userid === this.udService.userId);
+            //@ts-ignore
+            return removeMealSuccessAction({meals: meals.meals})
           }),
           catchError( ()=> of(removeMealFailureAction)),
         )
@@ -75,5 +79,6 @@ export class CalendarEffect{
 
   constructor(private store: Store,
               private mealsService: CalendarService,
+              private udService: UserDataService,
               private actions$: Actions,) {}
 }

@@ -2,7 +2,7 @@ import {createReducer, on} from "@ngrx/store";
 import {
   addMealAction,
   addMealFailureAction,
-  addMealSuccessAction,
+  addMealSuccessAction, calendarClearAction,
   loadMealsAction,
   loadMealsFailureAction,
   loadMealsSuccessAction,
@@ -17,6 +17,7 @@ import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
 
 export interface ICalendarState{
   mealsArr: ICalendarCell[]
+  id: string,
   week: Date[],
   isLoading: boolean;
   weekHasValue: boolean;
@@ -25,6 +26,7 @@ export interface ICalendarState{
 
 const initialCalendarState: ICalendarState = {
   mealsArr: [],
+  id: '',
   week: [],
   isLoading: false,
   weekHasValue: false,
@@ -33,7 +35,7 @@ const initialCalendarState: ICalendarState = {
 
 export const calendarReducer = createReducer(
   initialCalendarState,
-  on(weekChangeAction, (state, action) => ({
+  on(weekChangeAction, (state) => ({
     ...state,
     isLoading: true,
   })),
@@ -57,7 +59,7 @@ export const calendarReducer = createReducer(
   on(addMealSuccessAction, (state, action) => ({
     ...state,
     isLoading: false,
-    mealsArr: action.meals,
+    mealsArr: [...state.mealsArr, action.meal],
   })),
   on(addMealFailureAction, (state) => ({
     ...state,
@@ -88,10 +90,20 @@ export const calendarReducer = createReducer(
     isLoading: false,
     mealsArrHasValue: true,
     mealsArr: action.mealsArr,
+    id: action.id,
   })),
   on(loadMealsFailureAction, (state) => ({
     ...state,
     mealsArrHasValue: false,
     isLoading: false,
+  })),
+  on(calendarClearAction, (state)=>({
+    ...state,
+    mealsArr: [],
+    id: '',
+    week: [],
+    isLoading: false,
+    mealsArrHasValue: false,
+    weekHasValue: false,
   })),
 );

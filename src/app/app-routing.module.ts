@@ -6,24 +6,22 @@ import {UserProfileComponent} from "./Forms/user-profile/user-profile.component"
 import {AddMealComponent} from "./Forms/add-meal/add-meal.component";
 import {ViewMealComponent} from "./Forms/view-meal/view-meal.component";
 import {CalendarGridComponent} from "./calendar/callendar-grid/calendar-grid.component";
+import {ViewDayComponent} from "./Forms/view-day/view-day.component";
+import {AuthGuard} from "./shared/guards/auth.guard";
 
+//TODO: Guard
 const routes: Routes = [
-  {path: '', component: StartPageComponent, pathMatch: 'full'},
-  {path: 'calendar', component: CalendarComponent, children: [
+  {path: '', component: StartPageComponent},
+  {path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard], children: [
       {path: '', component: CalendarGridComponent},
       // {path: ':day/watch', component: ViewDayComponent},
       {path: ':date/:time/add', component: AddMealComponent},
       {path: ':date/:time/view', component: ViewMealComponent},
-      {path: ':date/:time/:isDay/view', component: ViewMealComponent},
+      {path: ':date/:time/view-day', component: ViewDayComponent},
     ]},
-  {path: 'profile', component: UserProfileComponent},
+  {path: 'profile', canActivate: [AuthGuard], component: UserProfileComponent},
 
-  /*                TEST                 */
-  // {path: 'a', component: AddMealComponent},
-  // {path: 'b', component: ViewMealComponent},
-  // {path: 'c', component: ViewDayComponent},
-
-  {path: '**', component: StartPageComponent}
+  {path: '**', redirectTo: '/', pathMatch: 'full'}
 ];
 
 @NgModule({

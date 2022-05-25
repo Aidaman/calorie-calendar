@@ -24,4 +24,7 @@ export enum ActionTypes{
   USER_LOGIN = '[User] login',
   USER_LOGIN_SUCCESS = '[User] login success',
   USER_LOGIN_FAILURE = '[User] login failure',
+
+  USER_LOGOUT = '[User] logout',
+  CALENDAR_CLEAR = '[Calendar] Clear',
 }

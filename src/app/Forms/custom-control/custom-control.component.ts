@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
 @Component({
@@ -24,9 +24,9 @@ export class CustomControlComponent implements ControlValueAccessor {
   onTouched = () => {};
 
   set value(value: string) {
-      this.val = value;
-      this.onChange(value);
-      this.onTouched();
+    this.val = value;
+    this.onChange(value);
+    this.onTouched();
   }
 
   writeValue(obj: string): void {

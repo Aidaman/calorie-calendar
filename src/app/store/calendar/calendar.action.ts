@@ -20,7 +20,7 @@ export const addMealAction = createAction(
 )
 export const addMealSuccessAction = createAction(
   ActionTypes.ADD_MEAL_SUCCESS,
-  props<{meals: ICalendarCell[]}>(),
+  props<{meal: ICalendarCell}>(),
 )
 export const addMealFailureAction = createAction(
   ActionTypes.ADD_MEAL_FAILURE,
@@ -28,7 +28,7 @@ export const addMealFailureAction = createAction(
 
 export const removeMealAction = createAction(
   ActionTypes.REMOVE_MEAL,
-  props<{date: Date, time: string}>(),
+  props<{id: string}>(),
 )
 export const removeMealSuccessAction = createAction(
   ActionTypes.REMOVE_MEAL_SUCCESS,
@@ -43,8 +43,12 @@ export const loadMealsAction = createAction(
 )
 export const loadMealsSuccessAction = createAction(
   ActionTypes.MEALS_LOAD_SUCCESS,
-  props<{mealsArr: ICalendarCell[]}>(),
+  props<{id: string, mealsArr: ICalendarCell[]}>(),
 )
 export const loadMealsFailureAction = createAction(
   ActionTypes.MEALS_LOAD_FAILURE,
+)
+
+export const calendarClearAction = createAction(
+  ActionTypes.CALENDAR_CLEAR,
 )

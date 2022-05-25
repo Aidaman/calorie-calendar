@@ -23,6 +23,7 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {calendarReducer} from "./store/calendar/calendar.reducer";
 import {UserEffect} from "./store/user/effects/user.effect";
 import {CalendarEffect} from "./store/calendar/effects/calendar.effect";
+import { ViewDayComponent } from './Forms/view-day/view-day.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import {CalendarEffect} from "./store/calendar/effects/calendar.effect";
     ViewMealComponent,
     StartPageComponent,
     CustomControlComponent,
-
+    ViewDayComponent,
   ],
     imports: [
         BrowserModule,
@@ -46,15 +47,8 @@ import {CalendarEffect} from "./store/calendar/effects/calendar.effect";
         StoreModule.forRoot({}),
         StoreModule.forFeature('user', userReducer),
         StoreModule.forFeature('calendar', calendarReducer),
-        StoreDevtoolsModule.instrument({
-
-        }),
-        EffectsModule.forRoot(
-          [UserEffect,
-                    CalendarEffect,]),
-
-        // SocialAuthService,
-        // GoogleLoginProvider,
+        StoreDevtoolsModule.instrument({}),
+        EffectsModule.forRoot([UserEffect, CalendarEffect,]),
         HammerModule
     ],
   providers: [

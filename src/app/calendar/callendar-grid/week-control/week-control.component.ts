@@ -31,7 +31,7 @@ export class WeekControlComponent{
   }
 
   public dayClick(weekday: Date): void {
-    this.router.navigate(['/calendar', +weekday, '12:00', true, 'view']);
+    this.router.navigate(['/calendar', +weekday, '12:00', 'view-day']);
   }
 
   public isDayActive(weekday: Date): boolean{

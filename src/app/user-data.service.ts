@@ -1,51 +1,47 @@
 import {Injectable} from "@angular/core";
 import {IUser} from "./shared/interfaces/user";
-import {Observable, of, switchMap, throwError} from "rxjs";
-import {hasUserValueSelector, userSelector} from "./store/user/selectors";
-import {userLoginAction} from "./store/user/user.action";
-import {map} from "rxjs/operators";
-import {Store} from "@ngrx/store";
+import {Observable, of, throwError} from "rxjs";
+import {ICalendarCell} from "./shared/interfaces/calendar-cell.interface";
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserDataService {
-  public user$: Observable<IUser> = this.store.select(hasUserValueSelector).pipe(
-    switchMap((hasValue: boolean)=>{
-      if (!hasValue){
-        this.store.dispatch(userLoginAction());
+  public userId: string = '';
+
+  constructor() {
+  }
+
+  public loadUsers(): IUser[] {
+    return JSON.parse(localStorage.getItem('users') as string) as IUser[] || [];
+  }
+
+  public loadUser(id: string): Observable<IUser | undefined> {
+    if (localStorage.getItem('users')) {
+      const users: IUser[] = this.loadUsers();
+      const user = users.find((value) => value.id === id);
+      return user !== undefined ? of(user) : throwError(() => 'Error Handle');
+    } else return throwError(() => 'Error Handle');
+  }
+
+  public saveUser(user: IUser, id: string): Observable<IUser> {
+    const users: IUser[] = this.loadUsers();
+    if (!users){
+      const users: IUser[] = [];
+      users.push({...user});
+      //If there is no users, then there is not meals as well
+      const meals: {userid: string, meals: ICalendarCell[]}[] = [{userid: user.id, meals: []}];
+      localStorage.setItem('meals', JSON.stringify(meals));
+    } else {
+      const findedUser = users.find((value)=>value.id === id)
+      const meals = JSON.parse(localStorage.getItem('meals') as string) as {userid: string, meals: ICalendarCell[]}[]
+      if (!meals.find((value)=>value.userid === user.id)){
+        meals.push({userid: user.id, meals: []});
+        localStorage.setItem('meals', JSON.stringify(meals));
       }
-      return this.store.select(userSelector)
-    }),
-  );
-
-  constructor(private store: Store) {
-    this.loadUser();
-  }
-
-  public loadUser(): Observable<IUser>{
-    if(localStorage.getItem('user')){
-      const user: IUser = JSON.parse(localStorage.getItem('user') as string);
-      return of(user);
-    } else return throwError('Error Handle');
-  }
-
-  public saveUser(user: IUser | null): Observable<IUser>{
-    if (user && user.heightCm !== 0 && user.weightkg !== 0){
-      const newUser: IUser = {
-        carbohydrates: user.carbohydrates,
-        fats: user.fats,
-        gender: user.gender,
-        heightCm: user.heightCm,
-        maxCal: user.maxCal,
-        minCal: user.minCal,
-        proteins: user.proteins,
-        weightkg: user.weightkg,
-        isLoggedIn: true,
-      };
-      localStorage.setItem('user', JSON.stringify(newUser));
-      return of(newUser);
+      findedUser ? users[users.indexOf(findedUser)] = {...user} : users.push({...user,});
     }
-    else return throwError('Error Handle');
+    localStorage.setItem('users', JSON.stringify(users));
+    return of(user)
   }
 }

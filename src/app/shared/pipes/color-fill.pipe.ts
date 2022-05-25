@@ -1,5 +1,4 @@
 import {Pipe} from "@angular/core";
-import {UserDataService} from "../../user-data.service";
 import {IUser} from "../interfaces/user";
 
 @Pipe({

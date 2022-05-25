@@ -1,20 +1,38 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
 import {CalendarService} from "../../calendar/calendar.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
 import {Store} from "@ngrx/store";
 import {addMealAction} from "../../store/calendar/calendar.action";
 import {notNegativeValidator} from "../not-negative.validator";
+import  * as uuid  from 'uuid';
+import {Observable, of, Subscription, switchMap} from "rxjs";
+import {mealSelector} from "../../store/calendar/selectors";
 
 @Component({
   selector: 'app-add-meal',
   templateUrl: './add-meal.component.html',
   styleUrls: ['./add-meal.component.scss', '../user-profile/user-profile.component.scss', '../custom-control/custom-control.component.scss']
 })
-export class AddMealComponent implements OnInit {
+export class AddMealComponent implements OnInit, OnDestroy {
   private date: Date = this.activeRoute.snapshot.params['date'];
   private time: string = this.activeRoute.snapshot.params['time'];
+  private mealSubscription!: Subscription;
+
+  public meal$: Observable<ICalendarCell | undefined> = this.store.select(mealSelector(this.date, this.time)).pipe(
+      switchMap((meal)=>{
+        if (meal){
+          this.form.get('title')?.setValue(meal.title);
+          this.form.get('kcal')?.setValue(meal.kcal);
+          this.form.get('time')?.setValue(meal.time);
+          this.form.get('fats')?.setValue(meal.fats);
+          this.form.get('protein')?.setValue(meal.proteins);
+          this.form.get('carbohydrates')?.setValue(meal.carbohydrates);
+        }
+        return of(meal);
+      })
+    );
   public img: string = '';
 
   // public src = this.imgInput.nativeElement.src;
@@ -30,10 +48,15 @@ export class AddMealComponent implements OnInit {
 
   constructor(private activeRoute: ActivatedRoute,
               private cService: CalendarService,
+              private router: Router,
               private store: Store) { }
 
   ngOnInit(): void {
     this.form.get('time')?.setValue(this.time);
+    this.mealSubscription  = this.meal$.subscribe();
+  }
+  ngOnDestroy(): void {
+    this.mealSubscription.unsubscribe();
   }
 
   public saveMeal(): void {
@@ -42,23 +65,21 @@ export class AddMealComponent implements OnInit {
         carbohydrates: Math.abs(this.form.get('carbohydrates')?.value),
         date: this.date,
         fats: Math.abs(this.form.get('fats')?.value),
-        id: Math.floor(Math.random() * (1000000 - 1) + 1),
+        id: uuid.v4(),
         kcal: Math.abs(this.form.get('kcal')?.value),
         proteins: Math.abs(this.form.get('protein')?.value),
-        time: this.form.get('time')?.value.substr(0, 2)+':00',
+        time: this.form.get('time')?.value.slice(0, 2)+':00',
         title: this.form.get('title')?.value,
         image: this.form.get('image')?.value
-      }
-      // this.cService.mealsArr.push(newCell);
-      // this.cService.addNewMeal(meal);
+      };
       this.store.dispatch(addMealAction({meal}));
       this.form.reset();
-
+      this.router.navigate(['/calendar']);
 
     }
   }
 
-  imageChanged(e: any) {
+  public imageChanged(e: any) {
     const file = e.target.files[0]
     const reader = new FileReader();
     reader.onloadend = () => {

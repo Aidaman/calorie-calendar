@@ -17,7 +17,7 @@ export class UserEffect{
   userUpdate$ = createEffect( ()=>this.actions$.pipe(
     ofType(userUpdateAction),
     switchMap( ({user})=>{
-      return this.uCervice.saveUser(user).pipe(
+      return this.uCervice.saveUser(user, this.uCervice.userId).pipe(
         map((res) => userUpdateSuccessAction({user: res})),
         catchError(()=> of(userUpdateFailureAction()) )
       );
@@ -27,8 +27,9 @@ export class UserEffect{
   userLogin$ = createEffect(
     ()=> this.actions$.pipe(
       ofType(userLoginAction),
-      switchMap( ()=> {
-        return this.uCervice.loadUser().pipe(
+      switchMap( ({id})=> {
+        return this.uCervice.loadUser(id).pipe(
+          // @ts-ignore
           map((res)=> userLoginSuccessAction({user: res})),
           catchError(() =>  of(userLoginFailureAction()))
         );

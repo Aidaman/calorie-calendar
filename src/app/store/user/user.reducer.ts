@@ -1,12 +1,13 @@
 import {createReducer, on} from "@ngrx/store";
 import {
   userLoginAction, userLoginFailureAction,
-  userLoginSuccessAction,
+  userLoginSuccessAction, userLogoutAction,
   userUpdateAction,
   userUpdateFailureAction,
   userUpdateSuccessAction
 } from "./user.action";
 import {IUser} from "../../shared/interfaces/user";
+import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
 
 export interface IUserState{
   isLoading: boolean,
@@ -15,7 +16,17 @@ export interface IUserState{
 }
 
 const initialUserState: IUserState = {
-  user: {},
+  user: {
+    id: '',
+    gender: '',
+    heightCm: 0,
+    weightkg: 0,
+    minCal: 0,
+    maxCal: 0,
+    fats: 0,
+    proteins: 0,
+    carbohydrates: 0,
+  },
   isLoading: false,
   hasValue: false,
 }
@@ -60,7 +71,26 @@ export const userReducer = createReducer(
   on(userLoginFailureAction, (state)=> {
     return ({
       ...state,
+      hasValue: false,
       isLoading: false,
     })
   }),
+  on(userLogoutAction, ()=> {
+    return ({
+      user: {
+        id: '',
+        gender: '',
+        heightCm: 0,
+        weightkg: 0,
+        minCal: 0,
+        maxCal: 0,
+        fats: 0,
+        proteins: 0,
+        carbohydrates: 0,
+        meals: [],
+      },
+      isLoading: false,
+      hasValue: false,
+    })
+  })
 )

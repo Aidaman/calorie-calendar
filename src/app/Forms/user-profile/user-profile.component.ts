@@ -1,14 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserDataService} from "../../user-data.service";
 import {Router} from "@angular/router";
 import {IUser} from "../../shared/interfaces/user";
 import {Store} from "@ngrx/store";
-import {userLoginAction, userUpdateAction} from "../../store/user/user.action";
-import {Observable, switchMap, tap} from "rxjs";
-import {hasUserValueSelector, userSelector} from "../../store/user/selectors";
+import {userLoginAction, userLogoutAction, userUpdateAction} from "../../store/user/user.action";
+import {Observable, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
 import {notNegativeValidator} from "../not-negative.validator";
+import {hasUserValueSelector, userSelector} from "../../store/user/selectors";
+import {CalendarService} from "../../calendar/calendar.service";
+import {calendarClearAction} from "../../store/calendar/calendar.action";
 
 @Component({
   selector: 'app-user-profile',
@@ -26,10 +28,18 @@ export class UserProfileComponent {
     fats: [null, [Validators.required, notNegativeValidator]],
     protein: [null, [Validators.required, notNegativeValidator]],
     carbohydrates: [null, [Validators.required, notNegativeValidator]],
+
+    meals: [null],
   });
   public genders: string[] = ['female', 'male']
 
-  public user$: Observable<IUser> = this.udService.user$.pipe(
+  public user$: Observable<IUser> = this.store.select(hasUserValueSelector).pipe(
+    switchMap((hasValue)=>{
+      if(!hasValue){
+        this.store.dispatch(userLoginAction({id: this.udService.userId}));
+      }
+      return this.store.select(userSelector);
+    }),
     map((user) => {
       this.regForm.get('gender')?.setValue(user?.gender);
       this.regForm.get('height')?.setValue(user?.heightCm);
@@ -50,12 +60,13 @@ export class UserProfileComponent {
 
   constructor(private fb: FormBuilder,
               private udService: UserDataService,
+              private calendarService: CalendarService,
               private store: Store,
               private router: Router) {
   }
 
   private calculateBMR(weight: number, height: number, age: number, gender: string): number {
-    if (gender.substr(0, 3) === 'fem') {
+    if (gender.slice(0, 3) === 'fem') {
       return 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
     } else {
       return 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
@@ -80,6 +91,7 @@ export class UserProfileComponent {
     this.calculateCalories();
 
     const user: IUser = {
+      id: this.udService.userId,
       carbohydrates: Math.abs(this.regForm.get('carbohydrates')?.value),
       fats: Math.abs(this.regForm.get('fats')?.value),
       gender: this.regForm.get('gender')?.value,
@@ -88,14 +100,15 @@ export class UserProfileComponent {
       minCal: Math.abs(this.minCal),
       proteins: Math.abs(this.regForm.get('protein')?.value),
       weightkg: Math.abs(this.regForm.get('weight')?.value),
-      isLoggedIn: true,
     }
 
+    this.udService.saveUser(user, this.udService.userId );
     this.store.dispatch(userUpdateAction({user}))
     this.router.navigate(['/calendar']);
   }
 
   public logOut() {
-
+    this.store.dispatch(userLogoutAction());
+    this.store.dispatch(calendarClearAction());
   }
 }

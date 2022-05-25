@@ -4,9 +4,6 @@ import {ColorFillPipe} from "./pipes/color-fill.pipe";
 import {HandleOutputPipe} from "./pipes/handle-output.pipe";
 import {HandleKcalPipe} from "./pipes/handleKcal.pipe";
 import {ShortPipe} from "./pipes/short.pipe";
-import {FindMealPipe} from "./pipes/find-meal.pipe";
-
-
 
 @NgModule({
   declarations: [
@@ -14,7 +11,6 @@ import {FindMealPipe} from "./pipes/find-meal.pipe";
     HandleOutputPipe,
     HandleKcalPipe,
     ShortPipe,
-    FindMealPipe,
   ],
   imports: [
     CommonModule,
@@ -24,7 +20,6 @@ import {FindMealPipe} from "./pipes/find-meal.pipe";
     HandleOutputPipe,
     HandleKcalPipe,
     ShortPipe,
-    FindMealPipe,
   ]
 })
 export class SharedModule { }

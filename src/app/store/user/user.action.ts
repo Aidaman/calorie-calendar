@@ -18,6 +18,7 @@ export const userUpdateFailureAction = createAction(
 
 export const userLoginAction = createAction(
   ActionTypes.USER_LOGIN,
+  props<{id: string}>()
 )
 
 export const userLoginSuccessAction = createAction(
@@ -27,4 +28,8 @@ export const userLoginSuccessAction = createAction(
 
 export const userLoginFailureAction = createAction(
   ActionTypes.USER_LOGIN_FAILURE,
+)
+
+export const userLogoutAction = createAction(
+  ActionTypes.USER_LOGOUT,
 )

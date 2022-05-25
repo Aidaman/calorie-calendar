@@ -13,10 +13,21 @@ export const hasMealsArrValueSelector = createSelector(
   (calendarState: ICalendarState) => calendarState.mealsArrHasValue
 );
 
-export const hasWeekValueSelector = createSelector(
+export const mealsInDaySelector = (date: Date) => createSelector(
   calendarFeatureSelector,
-  (calendarState: ICalendarState) => calendarState.weekHasValue
-);
+  (calendarState: ICalendarState) => calendarState.mealsArr.filter((value)=> +value.date === +date),
+)
+
+export const mealSelector = (date: Date, time: string) => createSelector(
+  calendarFeatureSelector,
+  (calendarState: ICalendarState) => calendarState.mealsArr.find((value)=> (+value.date === +date && value.time === time)),
+)
+
+/** is not needed due to week changes often **/
+//   export const hasWeekValueSelector = createSelector(
+//   calendarFeatureSelector,
+//   (calendarState: ICalendarState) => calendarState.weekHasValue
+// );
 
 export const weekSelector = createSelector(
   calendarFeatureSelector,

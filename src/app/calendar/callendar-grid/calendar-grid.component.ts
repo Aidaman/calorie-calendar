@@ -7,7 +7,7 @@ import {Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {loadMealsAction} from "../../store/calendar/calendar.action";
 import {BehaviorSubject, Observable, switchMap} from "rxjs";
-import {hasMealsArrValueSelector, mealsArrSelector, weekSelector} from "../../store/calendar/selectors";
+import {hasMealsArrValueSelector, mealsArrSelector} from "../../store/calendar/selectors";
 import {ICalendarCell} from "../../shared/interfaces/calendar-cell.interface";
 import {map} from "rxjs/operators";
 

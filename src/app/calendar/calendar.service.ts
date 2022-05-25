@@ -11,7 +11,6 @@ import {SelectedMonthService} from "./calendar-select/selected-month.service";
 })
 export class CalendarService {
   public week: BehaviorSubject<Date[]> = new BehaviorSubject<Date[]>([]);
-  public mealsArr: Observable<ICalendarCell[]> = this.getMealsAsync()
 
   constructor(private store: Store,
               public selectedMonth: SelectedMonthService){}
@@ -35,22 +34,36 @@ export class CalendarService {
     return this.week.value
   }
 
-  public getMealsAsync(): Observable<ICalendarCell[]>{
+  public getMealsAsync(): Observable<{ userid: string; meals: ICalendarCell[] }[]>{
     return of(this.getMeals());
   }
-  private getMeals(): ICalendarCell[]{
-    return JSON.parse( localStorage.getItem('meals') as string ) as ICalendarCell[] || [];
+
+  private getMeals(): { userid: string; meals: ICalendarCell[] }[]{
+    return (JSON.parse( localStorage.getItem('meals') as string ) as {userid: string, meals: ICalendarCell[]}[]);
   }
 
-  public addNewMeal(calendarCell: ICalendarCell): Observable<ICalendarCell[]>{
-    const newArr: ICalendarCell[] = this.getMeals();
-    newArr.push(calendarCell);
-    localStorage.setItem('meals', JSON.stringify(newArr));
-    return of(newArr)
+  public addNewMeal(calendarCell: ICalendarCell, id: string): Observable<{ userid: string; meals: ICalendarCell[] }[]>{
+    if(this.getMeals()){
+      const meals = this.getMeals();
+      meals.forEach((value)=>{
+        if(value.userid === id){
+          value.meals.push(calendarCell);
+        }
+      });
+      localStorage.setItem('meals', JSON.stringify(meals));
+      return of(meals);
+    } else return throwError( ()=>'A problem with meals appeared');
   }
-  public deleteMeal(date: Date, time: string): Observable<ICalendarCell[]>{
-    const newArr: ICalendarCell[] = this.getMeals().filter(meal => meal.date+' '+meal.time !== date+' '+time);
-    localStorage.setItem('meals', JSON.stringify(newArr));
-    return of(newArr) || throwError('A problem with deleting the meal appeared');
+
+  public deleteMeal(mealId: string, userid: string): Observable<{ userid: string; meals: ICalendarCell[] }[]>{
+    if(this.getMeals()){
+      let meals = this.getMeals();
+      meals.map((value)=>{
+        if(value.userid === userid) value.meals = value.meals.filter((meal)=> meal.id !== mealId);
+      });
+
+      localStorage.setItem('meals', JSON.stringify(meals));
+      return of(meals)
+    } else return throwError( ()=>'A problem with meals appeared');
   }
 }

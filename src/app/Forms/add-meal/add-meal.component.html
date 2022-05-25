@@ -38,7 +38,6 @@
           <img *ngIf="img" [src]="img" alt="" class="test">
         </label>
         <input type="file"
-               #imageInput
                (input)="imageChanged($event)"
                formControlName="image"
                id="image-input">
@@ -50,7 +49,5 @@
               [disabled]="form.invalid"
               (click)="saveMeal()">Save Settings</button>
     </div>
-
-
 
 </div>
