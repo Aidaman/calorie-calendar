@@ -10,7 +10,7 @@ export class HandleOutputPipe implements PipeTransform {
     value.forEach((meals)=>{
       if (+meals.date === +date) res = meals.meals.get(key);
     });
-    return res? res : null;
+    return res ?? null;
   }
 }
 

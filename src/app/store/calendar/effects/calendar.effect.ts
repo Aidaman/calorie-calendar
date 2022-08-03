@@ -33,7 +33,7 @@ export class CalendarEffect{
     })
   ));
 
-  getMealsAsync$ = createEffect(
+  getMeals$ = createEffect(
     ()=>this.actions$.pipe(
       ofType(loadMealsAction),
       switchMap( ()=>{

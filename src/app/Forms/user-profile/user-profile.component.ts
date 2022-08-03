@@ -65,7 +65,7 @@ export class UserProfileComponent {
               private router: Router) {
   }
 
-  private calculateBMR(weight: number, height: number, age: number, gender: string): number {
+  public calculateBMR(weight: number, height: number, age: number, gender: string): number {
     if (gender.slice(0, 3) === 'fem') {
       return 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
     } else {

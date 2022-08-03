@@ -97,6 +97,7 @@ export const calendarReducer = createReducer(
     mealsArrHasValue: false,
     isLoading: false,
   })),
+
   on(calendarClearAction, (state)=>({
     ...state,
     mealsArr: [],

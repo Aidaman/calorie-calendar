@@ -10,10 +10,15 @@ import {IUser} from "../shared/interfaces/user";
 @Component({
   selector: 'app-start-page',
   templateUrl: './start-page.component.html',
-  styleUrls: ['./start-page.component.scss']
+  styleUrls: ['./start-page.component.scss'],
+  providers: [SocialAuthService]
 })
 export class StartPageComponent implements OnInit {
-  loginForm!: FormGroup;
+  public title: string = 'Calorie Calendar'
+  loginForm: FormGroup = this.formBuilder.group({
+    email: ['', Validators.required],
+    password: ['', Validators.required],
+  });
   socialUser!: SocialUser;
   isLoggedin?: boolean = false;
 
@@ -27,10 +32,6 @@ export class StartPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-    });
     this.socialAuthService.authState.subscribe((user) => {
       this.socialUser = user;
       this.isLoggedin = user != null;
@@ -38,7 +39,6 @@ export class StartPageComponent implements OnInit {
   }
 
   async loginWithGoogle(): Promise<void> {
-    console.log('login');
     const users = this.udService.loadUsers();
     try {
       const authUser = await this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
@@ -71,7 +71,6 @@ export class StartPageComponent implements OnInit {
   }
 
   logOut(): void {
-    console.log('logout');
     this.udService.userId = '';
     this.socialAuthService.signOut();
   }

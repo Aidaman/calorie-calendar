@@ -1,6 +1,6 @@
 <div class="wrapper" id="select-handler">
   <div class="select" (click)="selectIsOpen = !selectIsOpen">
-    <span>{{selectedOption.value | lowercase | shortTitle:3:false}}<i class="fa fa-chevron-down"></i></span>
+    <span>{{selectedOption.value | shortTitle:3:false}}<i class="fa fa-chevron-down"></i></span>
   </div>
 
   <div class="select__options" *ngIf="selectIsOpen">

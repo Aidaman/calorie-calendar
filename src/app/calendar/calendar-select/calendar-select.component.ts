@@ -6,7 +6,7 @@ import {Months} from "../../shared/consts/months";
 @Component({
   selector: 'app-calendar-select',
   templateUrl: './calendar-select.component.html',
-  styleUrls: ['./calendar-select.component.scss']
+  styleUrls: ['./calendar-select.component.scss'],
 })
 export class CalendarSelectComponent {
   @Input() data: string[] = [];
